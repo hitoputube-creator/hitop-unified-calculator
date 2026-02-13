@@ -2,16 +2,26 @@
   "name": "하이탑부동산 통합 계산기",
   "short_name": "하이탑계산기",
   "description": "상가 수익률, 임대료 인상, 취득세, 중개수수료 계산",
-  "start_url": "/hitop-unified-calculator/",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0F172A",
-  "theme_color": "#0F172A",
+  "background_color": "#004d40",
+  "theme_color": "#004d40",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%230F172A'/%3E%3Ctext x='256' y='340' font-size='280' text-anchor='middle' fill='%23FFC107' font-weight='bold' font-family='sans-serif'%3E🏢%3C/text%3E%3C/svg%3E",
-      "sizes": "512x512",
-      "type": "image/svg+xml"
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
     }
   ]
 }
