@@ -2,7 +2,7 @@
   "name": "하이탑부동산 통합 계산기",
   "short_name": "하이탑계산기",
   "description": "상가 수익률, 임대료 인상, 취득세, 중개수수료 계산",
-  "start_url": "./index.html",
+  "start_url": "/hitop-unified-calculator/",
   "display": "standalone",
   "background_color": "#0F172A",
   "theme_color": "#0F172A",
