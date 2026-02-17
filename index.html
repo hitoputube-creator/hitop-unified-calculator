@@ -1019,98 +1019,77 @@
             }
         }
 
-        function calculateAcquisitionTax() {
-            const propertyType = document.getElementById('propertyType').value;
-            const acquisitionPrice = getNumericValue(document.getElementById('acquisitionPrice'));
-            const adjustedArea = document.getElementById('adjustedArea').value;
+function calculateAcquisitionTax() {
+    const propertyType = document.getElementById('propertyType').value;
+    const acquisitionPrice = getNumericValue(document.getElementById('acquisitionPrice'));
+    const adjustedArea = document.getElementById('adjustedArea').value;
 
-            if (!propertyType || acquisitionPrice === 0) {
-                alert('부동산 유형과 취득가액을 입력해주세요.');
-                return;
-            }
+    if (!propertyType || acquisitionPrice === 0) {
+        alert('부동산 유형과 취득가액을 입력해주세요.');
+        return;
+    }
 
-            let acquisitionTaxRate = 0;
-            let educationTaxRate = 0.1; // 지방교육세 10%
-            let ruralTaxRate = 0;
-            
-            // 주택외 (상가/오피스텔/토지)
-            if (propertyType === 'commercial') {
-                acquisitionTaxRate = 0.04; // 4%
-                ruralTaxRate = 0.2; // 농어촌특별세 20%
-                educationTaxRate = 0.1; // 지방교육세 10%
-            }
-            // 1주택자
-            else if (propertyType === 'house1') {
-                if (acquisitionPrice <= 600000000) {
-                    acquisitionTaxRate = 0.01; // 1%
-                } else if (acquisitionPrice <= 900000000) {
-                    // 6억 초과 9억 이하: 누진 계산
-                    const base = 6000000; // 6억까지 1%
-const excess = acquisitionPrice - 600000000;
-const progressive = excess * 0.0233;
-                    acquisitionTaxRate = (base + progressive) / acquisitionPrice;
-                } else {
-                    acquisitionTaxRate = 0.03; // 3%
-                }
-            }
-            // 2주택자
-            else if (propertyType === 'house2') {
-                if (adjustedArea === 'yes') {
-                    // 조정대상지역
-                    acquisitionTaxRate = 0.08; // 8%
-                    ruralTaxRate = 0.6; // 농특세 60%
-                } else {
-                    // 일반지역 - 1주택자와 동일
-                    if (acquisitionPrice <= 600000000) {
-                        acquisitionTaxRate = 0.01;
-                    } else if (acquisitionPrice <= 900000000) {
-                        const base = 6000000;
-const excess = acquisitionPrice - 600000000;
-const progressive = excess * 0.0233;
-                        acquisitionTaxRate = (base + progressive) / acquisitionPrice;
-                    } else {
-                        acquisitionTaxRate = 0.03;
-                    }
-                }
-            }
-            // 3주택자
-            else if (propertyType === 'house3') {
-                if (adjustedArea === 'yes') {
-                    // 조정대상지역
-                    acquisitionTaxRate = 0.12; // 12%
-                    ruralTaxRate = 1.0; // 농특세 100%
-                } else {
-                    // 조정대상지역 외
-                    acquisitionTaxRate = 0.08; // 8%
-                    ruralTaxRate = 0.6; // 농특세 60%
-                }
-            }
-            // 4주택 이상
-            else if (propertyType === 'house4') {
-                if (adjustedArea === 'yes') {
-                    // 조정대상지역
-                    acquisitionTaxRate = 0.12; // 12%
-                    ruralTaxRate = 0.6; // 농특세 60%
-                } else {
-                    // 조정대상지역 외
-                    acquisitionTaxRate = 0.12; // 12%
-                    ruralTaxRate = 0.6; // 농특세 60%
-                }
-            }
-
-            const acquisitionTax = acquisitionPrice * acquisitionTaxRate;
-            const educationTax = acquisitionTax * educationTaxRate; // 지방교육세
-            const ruralTax = acquisitionTax * ruralTaxRate; // 농어촌특별세
-            const totalTax = acquisitionTax + educationTax + ruralTax;
-
-            // 결과 표시
-            document.getElementById('acquisitionTaxAmount').textContent = Math.round(acquisitionTax).toLocaleString() + '원';
-            document.getElementById('educationTax').textContent = Math.round(educationTax).toLocaleString() + '원';
-            document.getElementById('ruralTax').textContent = Math.round(ruralTax).toLocaleString() + '원';
-            document.getElementById('totalTax').textContent = Math.round(totalTax).toLocaleString() + '원';
-
-            document.getElementById('taxResult').classList.add('show');
+    let acquisitionTax = 0;
+    let educationTaxRate = 0.1;
+    let ruralTaxRate = 0;
+    
+    // 주택외 (상가/오피스텔/토지)
+    if (propertyType === 'commercial') {
+        acquisitionTax = acquisitionPrice * 0.04;
+        ruralTaxRate = 0.2;
+    }
+    // 1주택자
+    else if (propertyType === 'house1') {
+        if (acquisitionPrice <= 600000000) {
+            acquisitionTax = acquisitionPrice * 0.01;
+        } else if (acquisitionPrice <= 900000000) {
+            acquisitionTax = 6000000 + (acquisitionPrice - 600000000) * 0.0233;
+        } else {
+            acquisitionTax = acquisitionPrice * 0.03;
         }
+    }
+    // 2주택자
+    else if (propertyType === 'house2') {
+        if (adjustedArea === 'yes') {
+            acquisitionTax = acquisitionPrice * 0.08;
+            ruralTaxRate = 0.6;
+        } else {
+            if (acquisitionPrice <= 600000000) {
+                acquisitionTax = acquisitionPrice * 0.01;
+            } else if (acquisitionPrice <= 900000000) {
+                acquisitionTax = 6000000 + (acquisitionPrice - 600000000) * 0.0233;
+            } else {
+                acquisitionTax = acquisitionPrice * 0.03;
+            }
+        }
+    }
+    // 3주택자
+    else if (propertyType === 'house3') {
+        if (adjustedArea === 'yes') {
+            acquisitionTax = acquisitionPrice * 0.12;
+            ruralTaxRate = 1.0;
+        } else {
+            acquisitionTax = acquisitionPrice * 0.08;
+            ruralTaxRate = 0.6;
+        }
+    }
+    // 4주택 이상
+    else if (propertyType === 'house4') {
+        acquisitionTax = acquisitionPrice * 0.12;
+        ruralTaxRate = 1.0;
+    }
+
+    const educationTax = acquisitionTax * educationTaxRate;
+    const ruralTax = acquisitionTax * ruralTaxRate;
+    const totalTax = acquisitionTax + educationTax + ruralTax;
+
+    document.getElementById('acquisitionTaxAmount').textContent = Math.round(acquisitionTax).toLocaleString() + '원';
+    document.getElementById('educationTax').textContent = Math.round(educationTax).toLocaleString() + '원';
+    document.getElementById('ruralTax').textContent = Math.round(ruralTax).toLocaleString() + '원';
+    document.getElementById('totalTax').textContent = Math.round(totalTax).toLocaleString() + '원';
+
+    document.getElementById('taxResult').classList.add('show');
+}
 
         function resetAcquisitionTax() {
             document.getElementById('propertyType').value = '';
