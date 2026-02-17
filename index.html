@@ -1046,7 +1046,8 @@
                 } else if (acquisitionPrice <= 900000000) {
                     // 6억 초과 9억 이하: 누진 계산
                     const base = 6000000; // 6억까지 1%
-                    const progressive = (acquisitionPrice - 600000000) * ((2/3 * acquisitionPrice - 3000000) / 100000000);
+const excess = acquisitionPrice - 600000000;
+const progressive = excess * 0.0233;
                     acquisitionTaxRate = (base + progressive) / acquisitionPrice;
                 } else {
                     acquisitionTaxRate = 0.03; // 3%
@@ -1064,7 +1065,8 @@
                         acquisitionTaxRate = 0.01;
                     } else if (acquisitionPrice <= 900000000) {
                         const base = 6000000;
-                        const progressive = (acquisitionPrice - 600000000) * ((2/3 * acquisitionPrice - 3000000) / 100000000);
+const excess = acquisitionPrice - 600000000;
+const progressive = excess * 0.0233;
                         acquisitionTaxRate = (base + progressive) / acquisitionPrice;
                     } else {
                         acquisitionTaxRate = 0.03;
