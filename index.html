@@ -223,6 +223,11 @@
             font-size: 1.5em;
         }
 
+        .highlight .result-label,
+        .highlight .result-value {
+            color: white !important;
+        }
+
         .notice {
             background: #fff3cd;
             border-left: 4px solid #ffc107;
@@ -231,15 +236,7 @@
             border-radius: 4px;
             color: #856404;
         }
-.highlight {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    font-size: 1.5em;
-}
-.highlight .result-label,
-.highlight .result-value {
-    color: white !important;
-}
+
         .notice strong {
             display: block;
             margin-bottom: 5px;
@@ -538,94 +535,95 @@
                 </div>
             </div>
 
-           <!-- 취득세 계산기 -->
-<div class="calculator" id="calc-2">
-    <h2>취득세 계산기</h2>
-    <p>부동산 유형별 취득세와 부가세를 계산합니다</p>
+            <!-- 취득세 계산기 -->
+            <div class="calculator" id="calc-2">
+                <h2>취득세 계산기</h2>
+                <p>부동산 유형별 취득세와 부가세를 계산합니다</p>
 
-    <div class="input-group">
-        <label for="propertyType">부동산 유형</label>
-        <select id="propertyType" onchange="updateTaxInfo()">
-            <option value="">선택하세요</option>
-            <option value="house1">주택 (1주택자)</option>
-            <option value="house2">주택 (2주택자)</option>
-            <option value="house3">주택 (3주택자)</option>
-            <option value="house4">주택 (4주택 이상)</option>
-            <option value="commercial">주택외 (상가/오피스텔/토지)</option>
-        </select>
-        <small id="taxInfo">유형을 선택하면 세율 정보가 표시됩니다</small>
-    </div>
+                <div class="input-group">
+                    <label for="propertyType">부동산 유형</label>
+                    <select id="propertyType" onchange="updateTaxInfo()">
+                        <option value="">선택하세요</option>
+                        <option value="house1">주택 (1주택자)</option>
+                        <option value="house2">주택 (2주택자)</option>
+                        <option value="house3">주택 (3주택자)</option>
+                        <option value="house4">주택 (4주택 이상)</option>
+                        <option value="commercial">주택외 (상가/오피스텔/토지)</option>
+                    </select>
+                    <small id="taxInfo">유형을 선택하면 세율 정보가 표시됩니다</small>
+                </div>
 
-    <div class="input-group">
-        <label for="acquisitionPrice">취득가액 (원)</label>
-        <input type="number" id="acquisitionPrice" placeholder="실거래가 기준">
-    </div>
+                <div class="input-group">
+                    <label for="acquisitionPrice">취득가액 (원)</label>
+                    <input type="number" id="acquisitionPrice" placeholder="실거래가 기준">
+                </div>
 
-    <div class="input-group" id="adjustedAreaGroup" style="display:none;">
-        <label for="adjustedArea">조정대상지역 여부</label>
-        <select id="adjustedArea">
-            <option value="no">일반지역</option>
-            <option value="yes">조정대상지역</option>
-        </select>
-        <small>주택의 경우 지역에 따라 세율 상이</small>
-    </div>
+                <div class="input-group" id="adjustedAreaGroup" style="display:none;">
+                    <label for="adjustedArea">조정대상지역 여부</label>
+                    <select id="adjustedArea">
+                        <option value="no">일반지역</option>
+                        <option value="yes">조정대상지역</option>
+                    </select>
+                    <small>주택의 경우 지역에 따라 세율 상이</small>
+                </div>
 
-    <div class="button-group">
-        <button class="btn-primary" onclick="calculateAcquisitionTax()">계산하기</button>
-        <button class="btn-secondary" onclick="resetAcquisitionTax()">초기화</button>
-    </div>
+                <div class="button-group">
+                    <button class="btn-primary" onclick="calculateAcquisitionTax()">계산하기</button>
+                    <button class="btn-secondary" onclick="resetAcquisitionTax()">초기화</button>
+                </div>
 
-    <div class="result" id="taxResult">
-        <div class="result-item">
-            <span class="result-label">취득세</span>
-            <span class="result-value" id="acquisitionTaxAmount">0원</span>
-        </div>
-        <div class="result-item">
-            <span class="result-label">지방교육세 (취득세의 10%)</span>
-            <span class="result-value" id="educationTax">0원</span>
-        </div>
-        <div class="result-item">
-            <span class="result-label">농어촌특별세</span>
-            <span class="result-value" id="ruralTax">0원</span>
-        </div>
-        <div class="result-item highlight">
-            <span class="result-label">총 납부세액</span>
-            <span class="result-value" id="totalTax">0원</span>
-        </div>
-        <div class="notice">
-            <strong>💡 주택 취득세율 안내</strong>
-            <p style="margin: 8px 0 5px 0;">
-                <strong>1주택자:</strong><br>
-                • 6억 이하: 1%<br>
-                • 6억 초과 9억 이하: 1~3% (누진)<br>
-                • 9억 초과: 3%
-            </p>
-            <p style="margin: 8px 0 5px 0;">
-                <strong>2주택자:</strong><br>
-                • 일반지역: 1~3% (1주택과 동일)<br>
-                • 조정대상지역: 8%
-            </p>
-            <p style="margin: 8px 0 5px 0;">
-                <strong>3주택자:</strong><br>
-                • 조정대상지역 외: 8%<br>
-                • 조정대상지역: 12%
-            </p>
-            <p style="margin: 8px 0 5px 0;">
-                <strong>4주택 이상:</strong><br>
-                • 12% (조정지역 여부 무관)
-            </p>
-            <p style="margin: 8px 0 5px 0;">
-                <strong>주택외(상가/토지):</strong><br>
-                • 취득세 4% + 농특세 0.8% + 교육세 0.4% = 5.2%
-            </p>
-            <p style="margin: 10px 0 0 0; padding-top: 10px; border-top: 1px solid #ddd;">
-                ※ 농어촌특별세: 주택 중과 시 취득세의 60~100%, 주택외 20%<br>
-                ※ 지방교육세: 취득세의 10% (모든 유형 공통)<br>
-                ※ 실제 세액은 면적, 법인 여부 등에 따라 달라질 수 있습니다.
-            </p>
-        </div>
-    </div>
-</div>
+                <div class="result" id="taxResult">
+                    <div class="result-item">
+                        <span class="result-label">취득세</span>
+                        <span class="result-value" id="acquisitionTaxAmount">0원</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">지방교육세 (취득세의 10%)</span>
+                        <span class="result-value" id="educationTax">0원</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">농어촌특별세</span>
+                        <span class="result-value" id="ruralTax">0원</span>
+                    </div>
+                    <div class="result-item highlight">
+                        <span class="result-label">총 납부세액</span>
+                        <span class="result-value" id="totalTax">0원</span>
+                    </div>
+                    <div class="notice">
+                        <strong>💡 주택 취득세율 안내</strong>
+                        <p style="margin: 8px 0 5px 0;">
+                            <strong>1주택자:</strong><br>
+                            • 6억 이하: 1%<br>
+                            • 6억 초과 9억 이하: 1~3% (누진)<br>
+                            • 9억 초과: 3%
+                        </p>
+                        <p style="margin: 8px 0 5px 0;">
+                            <strong>2주택자:</strong><br>
+                            • 일반지역: 1~3% (1주택과 동일)<br>
+                            • 조정대상지역: 8%
+                        </p>
+                        <p style="margin: 8px 0 5px 0;">
+                            <strong>3주택자:</strong><br>
+                            • 조정대상지역 외: 8%<br>
+                            • 조정대상지역: 12%
+                        </p>
+                        <p style="margin: 8px 0 5px 0;">
+                            <strong>4주택 이상:</strong><br>
+                            • 12% (조정지역 여부 무관)
+                        </p>
+                        <p style="margin: 8px 0 5px 0;">
+                            <strong>주택외(상가/토지):</strong><br>
+                            • 취득세 4% + 농특세 0.8% + 교육세 0.4% = 5.2%
+                        </p>
+                        <p style="margin: 10px 0 0 0; padding-top: 10px; border-top: 1px solid #ddd;">
+                            ※ 농어촌특별세: 주택 중과 시 취득세의 60~100%, 주택외 20%<br>
+                            ※ 지방교육세: 취득세의 10% (모든 유형 공통)<br>
+                            ※ 실제 세액은 면적, 법인 여부 등에 따라 달라질 수 있습니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             <!-- 중개수수료 계산기 -->
             <div class="calculator" id="calc-3">
                 <h2>중개수수료 계산기</h2>
@@ -812,57 +810,41 @@
     </div>
 
     <script>
-        // 금액 입력 시 자동 콤마 추가
         function formatNumber(input) {
             let value = input.value.replace(/,/g, '');
             if (value === '') return;
-            
-            // 숫자만 추출
             value = value.replace(/[^\d]/g, '');
-            
-            // 콤마 추가
             input.value = Number(value).toLocaleString();
         }
 
-        // 콤마 제거하고 숫자만 반환
         function getNumericValue(input) {
             return parseFloat(input.value.replace(/,/g, '')) || 0;
         }
 
-        // 페이지 로드 시 모든 number input에 이벤트 리스너 추가
         document.addEventListener('DOMContentLoaded', function() {
             const numberInputs = document.querySelectorAll('input[type="number"]');
-            
             numberInputs.forEach(input => {
-                // input 이벤트로 실시간 포맷팅
                 input.addEventListener('input', function() {
                     formatNumber(this);
                 });
-                
-                // type을 text로 변경 (콤마 입력을 위해)
                 input.type = 'text';
                 input.inputMode = 'numeric';
                 input.pattern = '[0-9,]*';
             });
         });
 
-        // 탭 전환
         function switchTab(index) {
             const tabs = document.querySelectorAll('.tab');
             const calculators = document.querySelectorAll('.calculator');
-            
             tabs.forEach(tab => tab.classList.remove('active'));
             calculators.forEach(calc => calc.classList.remove('active'));
-            
             tabs[index].classList.add('active');
             calculators[index].classList.add('active');
         }
 
-        // 대출 섹션 토글
         function toggleLoan() {
             const loanSection = document.getElementById('loanSection');
             const includeLoan = document.getElementById('includeLoan').checked;
-            
             if (includeLoan) {
                 loanSection.classList.add('show');
             } else {
@@ -872,12 +854,10 @@
             }
         }
 
-        // 상가 수익률 계산
         function calculateYield() {
             const price = getNumericValue(document.getElementById('price'));
             const rent = getNumericValue(document.getElementById('rent'));
             const deposit = getNumericValue(document.getElementById('deposit'));
-            
             const includeLoan = document.getElementById('includeLoan').checked;
             const loanAmount = getNumericValue(document.getElementById('loanAmount'));
             const loanRate = getNumericValue(document.getElementById('loanRate'));
@@ -887,39 +867,28 @@
                 return;
             }
 
-            // 취득세 자동계산 (4.6%) - 표시용
             const tax = price * 0.046;
-
-            const annualRent = rent * 12 * 10000; // 연간 임대료 (원)
+            const annualRent = rent * 12 * 10000;
             
-            // 실투자금 계산 (취득세 제외)
             let actualInvestment;
             if (includeLoan && loanAmount > 0) {
-                // 대출 포함: (매매가 - 대출금액 - 보증금)
                 actualInvestment = (price - loanAmount - deposit) * 10000;
             } else {
-                // 대출 미포함: (매매가 - 보증금)
                 actualInvestment = (price - deposit) * 10000;
             }
 
-            // 연간 대출이자 계산
             let annualLoanInterest = 0;
             if (includeLoan && loanAmount > 0 && loanRate > 0) {
                 annualLoanInterest = loanAmount * 10000 * (loanRate / 100);
             }
 
-            // 순수익 계산 (임대료 - 대출이자)
             const netIncome = annualRent - annualLoanInterest;
-
-            // 실질 수익률 계산
             const yieldRate = actualInvestment > 0 ? (netIncome / actualInvestment * 100) : 0;
 
-            // 결과 표시
             document.getElementById('salePriceDisplay').textContent = (price * 10000).toLocaleString() + '원';
             document.getElementById('taxDisplay').textContent = (tax * 10000).toLocaleString() + '원';
             document.getElementById('annualRent').textContent = annualRent.toLocaleString() + '원';
             
-            // 대출이자 행 표시/숨김
             const loanInterestRow = document.getElementById('loanInterestRow');
             if (includeLoan && loanAmount > 0) {
                 loanInterestRow.style.display = 'flex';
@@ -930,7 +899,6 @@
             
             document.getElementById('actualInvestment').textContent = actualInvestment.toLocaleString() + '원';
             document.getElementById('yieldRate').textContent = yieldRate.toFixed(2) + '%';
-
             document.getElementById('yieldResult').classList.add('show');
         }
 
@@ -945,7 +913,6 @@
             document.getElementById('yieldResult').classList.remove('show');
         }
 
-        // 임대료 인상 계산
         function calculateRentIncrease() {
             const currentDeposit = getNumericValue(document.getElementById('currentDeposit'));
             const currentRent = getNumericValue(document.getElementById('currentRent'));
@@ -957,33 +924,23 @@
                 return;
             }
 
-            // 보증금 차액
             const depositDiff = newDeposit - currentDeposit;
-            
-            // 전월세 전환에 따른 월세 조정액
             const rentAdjustment = (depositDiff * (conversionRate / 100)) / 12;
-            
-            // 5% 인상 한도
             const currentAnnualRent = currentRent * 12;
             const maxIncrease = currentAnnualRent * 0.05;
-            
-            // 조정된 월세 (전환율 적용)
             let newRent = currentRent - rentAdjustment;
-            
-            // 5% 인상 한도 체크
             const newAnnualRent = newRent * 12;
+            
             if (newAnnualRent > currentAnnualRent + maxIncrease) {
                 newRent = (currentAnnualRent + maxIncrease) / 12;
             }
 
-            // 결과 표시
             document.getElementById('beforeDeposit').textContent = currentDeposit.toLocaleString();
             document.getElementById('afterDeposit').textContent = newDeposit.toLocaleString();
             document.getElementById('beforeRent').textContent = currentRent.toLocaleString();
             document.getElementById('afterRent').textContent = Math.round(newRent).toLocaleString();
             document.getElementById('beforeAnnualRent').textContent = currentAnnualRent.toLocaleString();
             document.getElementById('afterAnnualRent').textContent = Math.round(newRent * 12).toLocaleString();
-
             document.getElementById('rentResult').classList.add('show');
         }
 
@@ -995,7 +952,6 @@
             document.getElementById('rentResult').classList.remove('show');
         }
 
-        // 취득세 계산
         function updateTaxInfo() {
             const propertyType = document.getElementById('propertyType').value;
             const taxInfo = document.getElementById('taxInfo');
@@ -1011,7 +967,6 @@
             
             taxInfo.textContent = taxRates[propertyType] || '유형을 선택하면 세율 정보가 표시됩니다';
             
-            // 주택인 경우에만 조정대상지역 선택 표시
             if (propertyType && propertyType.startsWith('house')) {
                 adjustedAreaGroup.style.display = 'block';
             } else {
@@ -1019,77 +974,71 @@
             }
         }
 
-function calculateAcquisitionTax() {
-    const propertyType = document.getElementById('propertyType').value;
-    const acquisitionPrice = getNumericValue(document.getElementById('acquisitionPrice'));
-    const adjustedArea = document.getElementById('adjustedArea').value;
+        function calculateAcquisitionTax() {
+            const propertyType = document.getElementById('propertyType').value;
+            const acquisitionPrice = getNumericValue(document.getElementById('acquisitionPrice'));
+            const adjustedArea = document.getElementById('adjustedArea').value;
 
-    if (!propertyType || acquisitionPrice === 0) {
-        alert('부동산 유형과 취득가액을 입력해주세요.');
-        return;
-    }
-
-    let acquisitionTax = 0;
-    let educationTaxRate = 0.1;
-    let ruralTaxRate = 0;
-    
-    // 주택외 (상가/오피스텔/토지)
-    if (propertyType === 'commercial') {
-        acquisitionTax = acquisitionPrice * 0.04;
-        ruralTaxRate = 0.2;
-    }
-    // 1주택자
-    else if (propertyType === 'house1') {
-        if (acquisitionPrice <= 600000000) {
-            acquisitionTax = acquisitionPrice * 0.01;
-        } else if (acquisitionPrice <= 900000000) {
-acquisitionTax = 6000000 + (acquisitionPrice - 600000000) * 0.0632;      
-        } else {
-            acquisitionTax = acquisitionPrice * 0.03;
-        }
-    }
-    // 2주택자
-    else if (propertyType === 'house2') {
-        if (adjustedArea === 'yes') {
-            acquisitionTax = acquisitionPrice * 0.08;
-            ruralTaxRate = 0.6;
-        } else {
-            if (acquisitionPrice <= 600000000) {
-                acquisitionTax = acquisitionPrice * 0.01;
-            } else if (acquisitionPrice <= 900000000) {
-acquisitionTax = 6000000 + (acquisitionPrice - 600000000) * 0.0632;
-            } else {
-                acquisitionTax = acquisitionPrice * 0.03;
+            if (!propertyType || acquisitionPrice === 0) {
+                alert('부동산 유형과 취득가액을 입력해주세요.');
+                return;
             }
+
+            let acquisitionTax = 0;
+            let educationTaxRate = 0.1;
+            let ruralTaxRate = 0;
+            
+            if (propertyType === 'commercial') {
+                acquisitionTax = acquisitionPrice * 0.04;
+                ruralTaxRate = 0.2;
+            }
+            else if (propertyType === 'house1') {
+                if (acquisitionPrice <= 600000000) {
+                    acquisitionTax = acquisitionPrice * 0.01;
+                } else if (acquisitionPrice <= 900000000) {
+                    acquisitionTax = 6000000 + (acquisitionPrice - 600000000) * 0.0632;
+                } else {
+                    acquisitionTax = acquisitionPrice * 0.03;
+                }
+            }
+            else if (propertyType === 'house2') {
+                if (adjustedArea === 'yes') {
+                    acquisitionTax = acquisitionPrice * 0.08;
+                    ruralTaxRate = 0.6;
+                } else {
+                    if (acquisitionPrice <= 600000000) {
+                        acquisitionTax = acquisitionPrice * 0.01;
+                    } else if (acquisitionPrice <= 900000000) {
+                        acquisitionTax = 6000000 + (acquisitionPrice - 600000000) * 0.0632;
+                    } else {
+                        acquisitionTax = acquisitionPrice * 0.03;
+                    }
+                }
+            }
+            else if (propertyType === 'house3') {
+                if (adjustedArea === 'yes') {
+                    acquisitionTax = acquisitionPrice * 0.12;
+                    ruralTaxRate = 1.0;
+                } else {
+                    acquisitionTax = acquisitionPrice * 0.08;
+                    ruralTaxRate = 0.6;
+                }
+            }
+            else if (propertyType === 'house4') {
+                acquisitionTax = acquisitionPrice * 0.12;
+                ruralTaxRate = 1.0;
+            }
+
+            const educationTax = acquisitionTax * educationTaxRate;
+            const ruralTax = acquisitionTax * ruralTaxRate;
+            const totalTax = acquisitionTax + educationTax + ruralTax;
+
+            document.getElementById('acquisitionTaxAmount').textContent = Math.round(acquisitionTax).toLocaleString() + '원';
+            document.getElementById('educationTax').textContent = Math.round(educationTax).toLocaleString() + '원';
+            document.getElementById('ruralTax').textContent = Math.round(ruralTax).toLocaleString() + '원';
+            document.getElementById('totalTax').textContent = Math.round(totalTax).toLocaleString() + '원';
+            document.getElementById('taxResult').classList.add('show');
         }
-    }
-    // 3주택자
-    else if (propertyType === 'house3') {
-        if (adjustedArea === 'yes') {
-            acquisitionTax = acquisitionPrice * 0.12;
-            ruralTaxRate = 1.0;
-        } else {
-            acquisitionTax = acquisitionPrice * 0.08;
-            ruralTaxRate = 0.6;
-        }
-    }
-    // 4주택 이상
-    else if (propertyType === 'house4') {
-        acquisitionTax = acquisitionPrice * 0.12;
-        ruralTaxRate = 1.0;
-    }
-
-    const educationTax = acquisitionTax * educationTaxRate;
-    const ruralTax = acquisitionTax * ruralTaxRate;
-    const totalTax = acquisitionTax + educationTax + ruralTax;
-
-    document.getElementById('acquisitionTaxAmount').textContent = Math.round(acquisitionTax).toLocaleString() + '원';
-    document.getElementById('educationTax').textContent = Math.round(educationTax).toLocaleString() + '원';
-    document.getElementById('ruralTax').textContent = Math.round(ruralTax).toLocaleString() + '원';
-    document.getElementById('totalTax').textContent = Math.round(totalTax).toLocaleString() + '원';
-
-    document.getElementById('taxResult').classList.add('show');
-}
 
         function resetAcquisitionTax() {
             document.getElementById('propertyType').value = '';
@@ -1100,18 +1049,15 @@ acquisitionTax = 6000000 + (acquisitionPrice - 600000000) * 0.0632;
             document.getElementById('taxResult').classList.remove('show');
         }
 
-        // 중개수수료 계산
         function updateBrokerageInfo() {
             const propertyType = document.getElementById('brokeragePropertyType').value;
             const brokerageInfo = document.getElementById('brokerageInfo');
-            
             const brokerageRates = {
                 'house': '거래금액에 따라 0.4~0.9%',
                 'officetel': '거래금액에 따라 0.4~0.9%',
                 'commercial': '거래금액에 따라 0.4~0.9%',
                 'land': '거래금액에 따라 0.4~0.9%'
             };
-            
             brokerageInfo.textContent = brokerageRates[propertyType] || '유형별 상한요율이 다릅니다';
         }
 
@@ -1142,28 +1088,22 @@ acquisitionTax = 6000000 + (acquisitionPrice - 600000000) * 0.0632;
                 return;
             }
 
-            // 거래금액 계산
             if (transactionType === 'rent') {
                 const rentDeposit = getNumericValue(document.getElementById('rentDeposit'));
                 const monthlyRent = getNumericValue(document.getElementById('monthlyRent'));
-                
                 if (rentDeposit === 0 && monthlyRent === 0) {
                     alert('보증금 또는 월세를 입력해주세요.');
                     return;
                 }
-                
-                // 임대차: 보증금 + (월세 × 100)
                 transactionAmount = rentDeposit + (monthlyRent * 100);
             } else {
                 transactionAmount = getNumericValue(document.getElementById('transactionAmount'));
-                
                 if (transactionAmount === 0) {
                     alert('거래금액을 입력해주세요.');
                     return;
                 }
             }
 
-            // 상한요율 결정
             let rate = 0;
             if (transactionAmount < 50000000) {
                 rate = 0.006;
@@ -1177,11 +1117,9 @@ acquisitionTax = 6000000 + (acquisitionPrice - 600000000) * 0.0632;
 
             const brokerageFee = transactionAmount * rate;
 
-            // 결과 표시
             document.getElementById('convertedAmount').textContent = Math.round(transactionAmount).toLocaleString() + '원';
             document.getElementById('appliedRate').textContent = (rate * 100).toFixed(2) + '%';
             document.getElementById('brokerageFee').textContent = Math.round(brokerageFee).toLocaleString() + '원';
-
             document.getElementById('brokerageResult').classList.add('show');
         }
 
@@ -1198,17 +1136,10 @@ acquisitionTax = 6000000 + (acquisitionPrice - 600000000) * 0.0632;
             document.getElementById('brokerageResult').classList.remove('show');
         }
 
-        // 적정 월세 계산
         function updateYieldRate() {
             const yieldType = document.getElementById('yieldType').value;
             const yieldInput = document.getElementById('targetYield');
-            
-            const yieldRates = {
-                'type1': 5,
-                'type2': 6,
-                'type3': 7
-            };
-            
+            const yieldRates = { 'type1': 5, 'type2': 6, 'type3': 7 };
             if (yieldType !== 'custom') {
                 yieldInput.value = yieldRates[yieldType];
                 yieldInput.readOnly = true;
@@ -1227,10 +1158,7 @@ acquisitionTax = 6000000 + (acquisitionPrice - 600000000) * 0.0632;
                 return;
             }
 
-            // 적정 월세 = 수익률 × (매매가 - 보증금) / 12
             const properRent = (targetYield / 100) * (propertyPrice - rentDeposit) / 12;
-
-            // 결과 표시
             document.getElementById('properRent').textContent = Math.round(properRent).toLocaleString() + '원';
             document.getElementById('properRentResult').classList.add('show');
         }
@@ -1244,17 +1172,10 @@ acquisitionTax = 6000000 + (acquisitionPrice - 600000000) * 0.0632;
             document.getElementById('properRentResult').classList.remove('show');
         }
 
-        // 적정 매매가 계산
         function updateSaleYieldRate() {
             const yieldType = document.getElementById('saleYieldType').value;
             const yieldInput = document.getElementById('saleYield');
-            
-            const yieldRates = {
-                'type1': 5,
-                'type2': 6,
-                'type3': 7
-            };
-            
+            const yieldRates = { 'type1': 5, 'type2': 6, 'type3': 7 };
             if (yieldType !== 'custom') {
                 yieldInput.value = yieldRates[yieldType];
                 yieldInput.readOnly = true;
@@ -1273,13 +1194,8 @@ acquisitionTax = 6000000 + (acquisitionPrice - 600000000) * 0.0632;
                 return;
             }
 
-            // 연수익 = 월세 × 12
             const annualIncome = saleMonthlyRent * 12;
-            
-            // 적정 매매가 = (연수익 / 수익률) + 보증금
             const properPrice = (annualIncome / (saleYield / 100)) + saleDeposit;
-
-            // 결과 표시
             document.getElementById('properPrice').textContent = Math.round(properPrice).toLocaleString() + '원';
             document.getElementById('properPriceResult').classList.add('show');
         }
