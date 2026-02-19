@@ -695,10 +695,13 @@
                         </p>
                         <p style="margin: 10px 0 0 0; padding-top: 10px; border-top: 1px solid #ddd;">
                             <strong>거래금액별 상한요율:</strong><br>
-                            • 5천만원 미만: 0.6% 이내<br>
-                            • 5천만원 이상 ~ 2억원 미만: 0.5% 이내<br>
-                            • 2억원 이상 ~ 6억원 미만: 0.4% 이내<br>
-                            • 6억원 이상: 0.9% 이내
+        • 5천만원 미만: 0.6%<br>
+        • 5천만원 이상 ~ 2억원 미만: 0.5%<br>
+        • 2억원 이상 ~ 6억원 미만: 0.4%<br>
+        • 6억원 이상 ~ 9억원 미만: 0.5%<br>
+        • 9억원 이상 ~ 12억원 미만: 0.6%<br>
+        • 12억원 이상 ~ 15억원 미만: 0.7%<br>
+        • 15억원 이상: 0.9%
                         </p>
                         <p style="margin: 10px 0 0 0; padding-top: 10px; border-top: 1px solid #ddd;">
                             전국 공통 상한요율입니다. 실제 중개보수는 거래 당사자 간 협의로 조정 가능합니다.
@@ -1105,16 +1108,25 @@
             }
 
             let rate = 0;
-            if (transactionAmount < 50000000) {
-                rate = 0.006;
-            } else if (transactionAmount < 200000000) {
-                rate = 0.005;
-            } else if (transactionAmount < 600000000) {
-                rate = 0.004;
-            } else {
-                rate = 0.009;
+             // 오피스텔: 주택과 동일
+    if (propertyType === 'house') {
+        if (transactionAmount < 50000000) {
+            rate = 0.006; // 0.6%
+        } else if (transactionAmount < 200000000) {
+            rate = 0.005; // 0.5%
+        } else if (transactionAmount < 600000000) {
+            rate = 0.004; // 0.4%
+        } else if (transactionAmount < 900000000) {
+            rate = 0.005; // 0.5%
+        } else if (transactionAmount < 1200000000) {
+            rate = 0.006; // 0.6%
+        } else if (transactionAmount < 1500000000) {
+            rate = 0.007; // 0.7%
+        } else {
+            rate = 0.009; // 0.9%
             }
 
+        
             const brokerageFee = transactionAmount * rate;
 
             document.getElementById('convertedAmount').textContent = Math.round(transactionAmount).toLocaleString() + '원';
