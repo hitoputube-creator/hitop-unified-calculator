@@ -684,17 +684,17 @@
                         <span class="result-label">중개보수 상한액</span>
                         <span class="result-value" id="brokerageFee">0원</span>
                     </div>
-                    <div class="notice">
-                        <strong>💡 중개수수료 계산 방법</strong>
-                        <p style="margin: 8px 0 5px 0;">
-                            <strong>매매:</strong> 거래금액 × 요율
-                        </p>
-                        <p style="margin: 5px 0;">
-                            <strong>임대차:</strong> (보증금 + 월세 × 100) × 요율<br>
-                            <small style="color: #666;">※ 월세는 100배로 환산하여 보증금에 합산합니다</small>
-                        </p>
-                        <p style="margin: 10px 0 0 0; padding-top: 10px; border-top: 1px solid #ddd;">
-                            <strong>거래금액별 상한요율:</strong><br>
+<div class="notice">
+    <strong>💡 중개수수료 계산 방법</strong>
+    <p style="margin: 8px 0 5px 0;">
+        <strong>매매:</strong> 거래금액 × 요율
+    </p>
+    <p style="margin: 5px 0;">
+        <strong>임대차:</strong> (보증금 + 월세 × 100) × 요율<br>
+        <small style="color: #666;">※ 월세는 100배로 환산하여 보증금에 합산합니다</small>
+    </p>
+    <p style="margin: 10px 0 0 0; padding-top: 10px; border-top: 1px solid #ddd;">
+        <strong>주택/오피스텔 거래금액별 상한요율:</strong><br>
         • 5천만원 미만: 0.6%<br>
         • 5천만원 이상 ~ 2억원 미만: 0.5%<br>
         • 2억원 이상 ~ 6억원 미만: 0.4%<br>
@@ -702,11 +702,15 @@
         • 9억원 이상 ~ 12억원 미만: 0.6%<br>
         • 12억원 이상 ~ 15억원 미만: 0.7%<br>
         • 15억원 이상: 0.9%
-                        </p>
-                        <p style="margin: 10px 0 0 0; padding-top: 10px; border-top: 1px solid #ddd;">
-                            전국 공통 상한요율입니다. 실제 중개보수는 거래 당사자 간 협의로 조정 가능합니다.
-                        </p>
-                    </div>
+    </p>
+    <p style="margin: 10px 0 0 0; padding-top: 10px; border-top: 1px solid #ddd;">
+        <strong>상가·점포/토지:</strong><br>
+        • 거래금액의 0.9% 한도 내에서 협의
+    </p>
+    <p style="margin: 10px 0 0 0; padding-top: 10px; border-top: 1px solid #ddd;">
+        ※ 상한요율은 쌍방 합산 기준입니다. 실제 중개보수는 거래 당사자 간 협의로 조정 가능합니다.
+    </p>
+</div>
                 </div>
             </div>
 
@@ -1081,34 +1085,35 @@
             }
         }
 
-        function calculateBrokerage() {
-            const propertyType = document.getElementById('brokeragePropertyType').value;
-            const transactionType = document.getElementById('transactionType').value;
-            let transactionAmount = 0;
+function calculateBrokerage() {
+    const propertyType = document.getElementById('brokeragePropertyType').value;
+    const transactionType = document.getElementById('transactionType').value;
+    let transactionAmount = 0;
 
-            if (!propertyType) {
-                alert('부동산 유형을 선택해주세요.');
-                return;
-            }
+    if (!propertyType) {
+        alert('부동산 유형을 선택해주세요.');
+        return;
+    }
 
-            if (transactionType === 'rent') {
-                const rentDeposit = getNumericValue(document.getElementById('rentDeposit'));
-                const monthlyRent = getNumericValue(document.getElementById('monthlyRent'));
-                if (rentDeposit === 0 && monthlyRent === 0) {
-                    alert('보증금 또는 월세를 입력해주세요.');
-                    return;
-                }
-                transactionAmount = rentDeposit + (monthlyRent * 100);
-            } else {
-                transactionAmount = getNumericValue(document.getElementById('transactionAmount'));
-                if (transactionAmount === 0) {
-                    alert('거래금액을 입력해주세요.');
-                    return;
-                }
-            }
+    if (transactionType === 'rent') {
+        const rentDeposit = getNumericValue(document.getElementById('rentDeposit'));
+        const monthlyRent = getNumericValue(document.getElementById('monthlyRent'));
+        if (rentDeposit === 0 && monthlyRent === 0) {
+            alert('보증금 또는 월세를 입력해주세요.');
+            return;
+        }
+        transactionAmount = rentDeposit + (monthlyRent * 100);
+    } else {
+        transactionAmount = getNumericValue(document.getElementById('transactionAmount'));
+        if (transactionAmount === 0) {
+            alert('거래금액을 입력해주세요.');
+            return;
+        }
+    }
 
-            let rate = 0;
-             // 오피스텔: 주택과 동일
+    let rate = 0;
+    
+    // 주택: 세분화된 요율 적용
     if (propertyType === 'house') {
         if (transactionAmount < 50000000) {
             rate = 0.006; // 0.6%
@@ -1124,16 +1129,38 @@
             rate = 0.007; // 0.7%
         } else {
             rate = 0.009; // 0.9%
-            }
-
-        
-            const brokerageFee = transactionAmount * rate;
-
-            document.getElementById('convertedAmount').textContent = Math.round(transactionAmount).toLocaleString() + '원';
-            document.getElementById('appliedRate').textContent = (rate * 100).toFixed(2) + '%';
-            document.getElementById('brokerageFee').textContent = Math.round(brokerageFee).toLocaleString() + '원';
-            document.getElementById('brokerageResult').classList.add('show');
         }
+    }
+    // 오피스텔: 주택과 동일
+    else if (propertyType === 'officetel') {
+        if (transactionAmount < 50000000) {
+            rate = 0.006;
+        } else if (transactionAmount < 200000000) {
+            rate = 0.005;
+        } else if (transactionAmount < 600000000) {
+            rate = 0.004;
+        } else if (transactionAmount < 900000000) {
+            rate = 0.005;
+        } else if (transactionAmount < 1200000000) {
+            rate = 0.006;
+        } else if (transactionAmount < 1500000000) {
+            rate = 0.007;
+        } else {
+            rate = 0.009;
+        }
+    }
+    // 상가·점포, 토지: 0.9% 한도 내 협의
+    else {
+        rate = 0.009; // 0.9% (상한)
+    }
+
+    const brokerageFee = transactionAmount * rate;
+
+    document.getElementById('convertedAmount').textContent = Math.round(transactionAmount).toLocaleString() + '원';
+    document.getElementById('appliedRate').textContent = (rate * 100).toFixed(1) + '%';
+    document.getElementById('brokerageFee').textContent = Math.round(brokerageFee).toLocaleString() + '원';
+    document.getElementById('brokerageResult').classList.add('show');
+}
 
         function resetBrokerage() {
             document.getElementById('brokeragePropertyType').value = '';
