@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>하이탑부동산 상가 계산기</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .tab-container {
+            background: white;
+            border-radius: 15px 15px 0 0;
+            overflow: hidden;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            background: none;
+            font-size: 0.9em;
+            color: #666;
+            min-width: 80px;
+        }
+
+        .tab:hover {
+            background: #e9ecef;
+        }
+
+        .tab.active {
+            background: white;
+            color: #667eea;
+            font-weight: bold;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .calculator {
+            display: none;
+            padding: 40px;
+            background: white;
+        }
+
+        .calculator.active {
+            display: block;
+        }
+
+        .calculator h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.8em;
+        }
+
+        .calculator > p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .input-group small {
+            display: block;
+            margin-top: 5px;
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        /* 금액 미리보기 */
+        .amount-preview {
+            display: none;
+            margin-top: 6px;
+            padding: 6px 10px;
+            background: #f0f4ff;
+            border-radius: 6px;
+            color: #667eea;
+            font-size: 0.95em;
+            font-weight: 600;
+        }
+        .amount-preview.show {
+            display: block;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin: 30px 0;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e9ecef;
+            color: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #dee2e6;
+        }
+
+        .result {
+            display: none;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+
+        .result.show {
+            display: block;
+            animation: slideIn 0.5s;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .result-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .result-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .result-value {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 1.2em;
+        }
+
+        .highlight .result-label,
+        .highlight .result-value {
+            color: white !important;
+        }
+
+        .notice {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+            color: #856404;
+        }
+
+        .notice strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* 결과 설명 박스 */
+        .result-explanation {
+            background: #e8f4fd;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 4px;
+            color: #334;
+            font-size: 0.95em;
+            line-height: 1.7;
+        }
+        .result-explanation strong {
+            display: block;
+            margin-bottom: 6px;
+            color: #667eea;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+            opacity: 0.9;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 30px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider { background-color: #667eea; }
+        input:checked + .slider:before { transform: translateX(30px); }
+
+        .loan-section {
+            display: none;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 2px solid #667eea;
+        }
+
+        .loan-section.show { display: block; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8em; }
+            .tab { flex-basis: 33.33%; padding: 12px 6px; font-size: 0.78em; }
+            .calculator { padding: 20px; }
+            .result-item { flex-direction: column; gap: 5px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>📊 하이탑부동산 상가 계산기</h1>
+        <p class="subtitle">상가 수익률, 임대료 인상, 중개수수료를 한곳에서 계산하세요</p>
+    </header>
+
+    <div class="tab-container">
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab(0)">📈 상가 수익률</button>
+            <button class="tab" onclick="switchTab(1)">📊 임대료 인상</button>
+            <button class="tab" onclick="switchTab(2)">🤝 중개수수료</button>
+        </div>
+
+        <!-- ===== 상가 수익률 계산기 ===== -->
+        <div class="calculator active" id="calc-0">
+            <h2>상가 수익률 계산기</h2>
+            <p>정확한 투자 분석으로 성공적인 상가 투자를 실현하세요</p>
+
+            <div class="toggle-container">
+                <label for="includeLoan"><strong>대출 포함</strong></label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="includeLoan" onchange="toggleLoan()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="input-group">
+                <label for="price">매매가 (원)</label>
+                <input type="text" inputmode="numeric" id="price" placeholder="예: 300,000,000" oninput="fmtInput(this); showPreview(this, 'price-preview')">
+                <div class="amount-preview" id="price-preview"></div>
+            </div>
+
+            <div class="input-group">
+                <label for="rent">월 임대료 (원)</label>
+                <input type="text" inputmode="numeric" id="rent" placeholder="예: 1,500,000" oninput="fmtInput(this); showPreview(this, 'rent-preview')">
+                <div class="amount-preview" id="rent-preview"></div>
+            </div>
+
+            <div class="input-group">
+                <label for="deposit">보증금 (원)</label>
+                <input type="text" inputmode="numeric" id="deposit" placeholder="예: 50,000,000" oninput="fmtInput(this); showPreview(this, 'deposit-preview')">
+                <div class="amount-preview" id="deposit-preview"></div>
+            </div>
+
+            <div class="loan-section" id="loanSection">
+                <div class="input-group">
+                    <label for="loanAmount">대출금액 (원)</label>
+                    <input type="text" inputmode="numeric" id="loanAmount" placeholder="예: 200,000,000" oninput="fmtInput(this); showPreview(this, 'loanAmount-preview')">
+                    <div class="amount-preview" id="loanAmount-preview"></div>
+                    <small>총 매매가 중 대출받는 금액</small>
+                </div>
+                <div class="input-group">
+                    <label for="loanRate">대출금리 (%)</label>
+                    <input type="text" inputmode="decimal" id="loanRate" placeholder="예: 4.5">
+                    <small>연 이자율</small>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-primary" onclick="calculateYield()">계산하기</button>
+                <button class="btn-secondary" onclick="resetYield()">초기화</button>
+            </div>
+
+            <div class="result" id="yieldResult">
+                <div class="result-item">
+                    <span class="result-label">매매가</span>
+                    <span class="result-value" id="salePriceDisplay">0원</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">취득세 (4.6%)</span>
+                    <span class="result-value" id="taxDisplay">0원</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">연간 임대수익</span>
+                    <span class="result-value" id="annualRent">0원</span>
+                </div>
+                <div class="result-item" id="loanInterestRow" style="display:none;">
+                    <span class="result-label">연간 대출이자</span>
+                    <span class="result-value" id="annualLoanInterest">0원</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">실투자금 (보증금 제외)</span>
+                    <span class="result-value" id="actualInvestment">0원</span>
+                </div>
+                <div class="result-item highlight">
+                    <span class="result-label">실질 수익률</span>
+                    <span class="result-value" id="yieldRate">0%</span>
+                </div>
+                <div class="result-explanation" id="yieldExplanation"></div>
+                <div class="notice">
+                    <strong>💡 수익률 계산 방법</strong>
+                    <p style="margin:8px 0 5px 0;">
+                        <strong>대출 미포함:</strong> 실투자금 = 매매가 - 보증금<br>
+                        수익률 = (연간 임대료 ÷ 실투자금) × 100
+                    </p>
+                    <p style="margin:5px 0;">
+                        <strong>대출 포함:</strong> 실투자금 = 매매가 - 대출금 - 보증금<br>
+                        수익률 = ((연간 임대료 - 연간 이자) ÷ 실투자금) × 100
+                    </p>
+                    <p style="margin:10px 0 0 0; padding-top:10px; border-top:1px solid #ddd;">
+                        ※ 취득세는 참고용이며 수익률 계산에 포함되지 않습니다.<br>
+                        ※ 실제 순수익률은 관리비, 재산세, 공실률 등을 추가로 고려해야 합니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 임대료 인상 계산기 ===== -->
+        <div class="calculator" id="calc-1">
+            <h2>임대료 인상 계산기</h2>
+            <p>임대차 갱신 시 인상률(기본 5%)을 적용한 변경 후 임대료를 계산합니다</p>
+
+            <div class="input-group">
+                <label for="currentDeposit">현재 보증금 (원)</label>
+                <input type="text" inputmode="numeric" id="currentDeposit" placeholder="현재 계약 중인 보증금" oninput="fmtInput(this); showPreview(this, 'currentDeposit-preview')">
+                <div class="amount-preview" id="currentDeposit-preview"></div>
+            </div>
+
+            <div class="input-group">
+                <label for="currentRent">현재 월세 (원)</label>
+                <input type="text" inputmode="numeric" id="currentRent" placeholder="현재 계약 중인 월세 (없으면 0)" oninput="fmtInput(this); showPreview(this, 'currentRent-preview')">
+                <div class="amount-preview" id="currentRent-preview"></div>
+            </div>
+
+            <div class="input-group">
+                <label for="newDeposit">변경 후 보증금 (원)</label>
+                <input type="text" inputmode="numeric" id="newDeposit" placeholder="변경하려는 보증금 (그대로면 현재 보증금 입력)" oninput="fmtInput(this); showPreview(this, 'newDeposit-preview')">
+                <div class="amount-preview" id="newDeposit-preview"></div>
+            </div>
+
+            <div class="input-group">
+                <label for="increaseRate">임대료 인상률 (%)</label>
+                <input type="text" inputmode="decimal" id="increaseRate" value="5">
+                <small>주택임대차보호법 상한: 5% / 변경이 필요할 때만 수정하세요</small>
+            </div>
+
+            <div class="input-group">
+                <label for="monthlyConvRate">월차임전환시산정률 (%)</label>
+                <input type="text" inputmode="decimal" id="monthlyConvRate" value="2">
+                <small>법정 월차임전환율 (통상 2%)</small>
+            </div>
+
+            <div class="input-group">
+                <label for="baseRate">한국은행 기준금리 (%)</label>
+                <input type="text" inputmode="decimal" id="baseRate" value="2.5">
+                <small>현재 기준금리 입력 (2025년 기준 약 2.5%)</small>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-primary" onclick="calculateRentIncrease()">계산하기</button>
+                <button class="btn-secondary" onclick="resetRentIncrease()">초기화</button>
+            </div>
+
+            <div class="result" id="rentResult">
+                <table>
+                    <tr>
+                        <th>항목</th>
+                        <th>변경 전</th>
+                        <th>변경 후</th>
+                    </tr>
+                    <tr>
+                        <td>임대보증금(원)</td>
+                        <td id="beforeDeposit">0</td>
+                        <td id="afterDeposit">0</td>
+                    </tr>
+                    <tr>
+                        <td>월 임대료(원)</td>
+                        <td id="beforeRent">0</td>
+                        <td id="afterRent">0</td>
+                    </tr>
+                    <tr>
+                        <td>연 임대료(원)</td>
+                        <td id="beforeAnnualRent">0</td>
+                        <td id="afterAnnualRent">0</td>
+                    </tr>
+                </table>
+                <div class="result-explanation" id="rentExplanation"></div>
+                <div class="notice">
+                    주택임대차보호법 제7조의2에 따라 임대료 증액은 5%를 초과할 수 없습니다.<br>
+                    보증금 변경 시 전월세전환율을 적용하여 월세를 조정할 수 있습니다.
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 중개수수료 계산기 ===== -->
+        <div class="calculator" id="calc-2">
+            <h2>중개수수료 계산기</h2>
+            <p>부동산 거래 유형별 중개보수 상한요율을 계산합니다</p>
+
+            <div class="input-group">
+                <label for="brokeragePropertyType">부동산 유형</label>
+                <select id="brokeragePropertyType" onchange="updateBrokerageInfo()">
+                    <option value="">선택하세요</option>
+                    <option value="house">주택</option>
+                    <option value="officetel">오피스텔</option>
+                    <option value="commercial">상가·점포</option>
+                    <option value="land">토지</option>
+                </select>
+                <small id="brokerageInfo">유형별 상한요율이 다릅니다</small>
+            </div>
+
+            <div class="input-group">
+                <label for="transactionType">거래 유형</label>
+                <select id="transactionType" onchange="toggleRentFields()">
+                    <option value="sale">매매</option>
+                    <option value="rent">임대차</option>
+                </select>
+                <small>매매/임대차에 따라 요율 상이</small>
+            </div>
+
+            <div class="input-group" id="saleAmountGroup">
+                <label for="transactionAmount">거래금액 (원)</label>
+                <input type="text" inputmode="numeric" id="transactionAmount" placeholder="매매가 입력" oninput="fmtInput(this); showPreview(this, 'transactionAmount-preview')">
+                <div class="amount-preview" id="transactionAmount-preview"></div>
+            </div>
+
+            <div class="input-group" id="rentDepositGroup" style="display:none;">
+                <label for="rentDeposit">보증금 (원)</label>
+                <input type="text" inputmode="numeric" id="rentDeposit" placeholder="임대차 보증금" oninput="fmtInput(this); showPreview(this, 'rentDeposit-preview')">
+                <div class="amount-preview" id="rentDeposit-preview"></div>
+            </div>
+
+            <div class="input-group" id="monthlyRentGroup" style="display:none;">
+                <label for="monthlyRent">월세 (원)</label>
+                <input type="text" inputmode="numeric" id="monthlyRent" placeholder="월세" oninput="fmtInput(this); showPreview(this, 'monthlyRent-preview')">
+                <div class="amount-preview" id="monthlyRent-preview"></div>
+                <small>월세 × 100으로 환산하여 계산됩니다</small>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-primary" onclick="calculateBrokerage()">계산하기</button>
+                <button class="btn-secondary" onclick="resetBrokerage()">초기화</button>
+            </div>
+
+            <div class="result" id="brokerageResult">
+                <div class="result-item">
+                    <span class="result-label">환산 거래금액</span>
+                    <span class="result-value" id="convertedAmount">0원</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">적용 요율</span>
+                    <span class="result-value" id="appliedRate">0%</span>
+                </div>
+                <div class="result-item highlight">
+                    <span class="result-label">중개보수 상한액</span>
+                    <span class="result-value" id="brokerageFee">0원</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">부가세 (VAT 10%)</span>
+                    <span class="result-value" id="brokerageVat">0원</span>
+                </div>
+                <div class="result-item" style="background:#f0f4ff;">
+                    <span class="result-label" style="color:#333; font-weight:700;">부가세 포함 합계</span>
+                    <span class="result-value" id="brokerageFeeTotal">0원</span>
+                </div>
+                <div class="result-explanation" id="brokerageExplanation"></div>
+                <div class="notice">
+                    <strong>💡 중개수수료 계산 방법</strong>
+                    <p style="margin:8px 0 5px 0;">
+                        <strong>매매:</strong> 거래금액 × 요율<br>
+                        <strong>임대차:</strong> (보증금 + 월세 × 100) × 요율<br>
+                        <small style="color:#666;">※ 월세는 100배 환산 후 보증금에 합산</small>
+                    </p>
+                    <p style="margin:8px 0 5px 0;">
+                        <strong>부가세(VAT):</strong> 개업공인중개사는 부가가치세법에 따라 중개보수에 10% VAT를 별도 수령할 수 있습니다. 실제 지불 금액 = 중개보수 + VAT
+                    </p>
+                    <p style="margin:10px 0 0 0; padding-top:10px; border-top:1px solid #ddd;">
+                        <strong>주택/오피스텔 거래금액별 상한요율:</strong><br>
+                        • 5천만원 미만: 0.6% &nbsp;• 5천만~2억 미만: 0.5%<br>
+                        • 2억~6억 미만: 0.4% &nbsp;• 6억~9억 미만: 0.5%<br>
+                        • 9억~12억 미만: 0.6% &nbsp;• 12억~15억 미만: 0.7%<br>
+                        • 15억 이상: 0.9%
+                    </p>
+                    <p style="margin:10px 0 0 0; padding-top:10px; border-top:1px solid #ddd;">
+                        <strong>상가·점포/토지:</strong> 거래금액의 0.9% 한도 내 협의<br>
+                        ※ 상한요율은 쌍방 합산 기준입니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p><strong>하이탑부동산</strong> · <a href="tel:031-949-8969">031-949-8969</a></p>
+    </footer>
+</div>
+
+<script>
+    // ========== 공통 유틸 ==========
+    function fmtInput(input) {
+        let v = input.value.replace(/,/g, '').replace(/[^\d]/g, '');
+        if (v === '') { input.value = ''; return; }
+        input.value = Number(v).toLocaleString();
+    }
+
+    function getVal(id) {
+        const el = document.getElementById(id);
+        if (!el) return 0;
+        return parseFloat(el.value.replace(/,/g, '')) || 0;
+    }
+
+    function fmt(n) {
+        return Math.round(n).toLocaleString() + '원';
+    }
+
+    function koreanAmount(n) {
+        if (!n || n === 0) return '';
+        const units = ['', '만', '억', '조'];
+        let result = '';
+        const man = Math.floor(n / 10000);
+        const remain = n % 10000;
+        const eok = Math.floor(man / 10000);
+        const manRem = man % 10000;
+        if (eok > 0) result += eok.toLocaleString() + '억 ';
+        if (manRem > 0) result += manRem.toLocaleString() + '만 ';
+        if (remain > 0) result += remain.toLocaleString();
+        return result.trim() + '원';
+    }
+
+    function showPreview(input, previewId) {
+        const v = parseFloat(input.value.replace(/,/g, '')) || 0;
+        const el = document.getElementById(previewId);
+        if (!el) return;
+        if (v > 0) {
+            el.textContent = '→ ' + koreanAmount(v);
+            el.classList.add('show');
+        } else {
+            el.classList.remove('show');
+        }
+    }
+
+    function switchTab(index) {
+        document.querySelectorAll('.tab').forEach((t, i) => {
+            t.classList.toggle('active', i === index);
+        });
+        document.querySelectorAll('.calculator').forEach((c, i) => {
+            c.classList.toggle('active', i === index);
+        });
+    }
+
+    // ========== 상가 수익률 ==========
+    function toggleLoan() {
+        const on = document.getElementById('includeLoan').checked;
+        document.getElementById('loanSection').classList.toggle('show', on);
+        if (!on) {
+            document.getElementById('loanAmount').value = '';
+            document.getElementById('loanRate').value = '';
+        }
+    }
+
+    function calculateYield() {
+        const price = getVal('price');
+        const rent = getVal('rent');
+        const deposit = getVal('deposit');
+        const includeLoan = document.getElementById('includeLoan').checked;
+        const loanAmount = getVal('loanAmount');
+        const loanRate = getVal('loanRate');
+
+        if (price === 0 || rent === 0) { alert('매매가와 월 임대료를 입력해주세요.'); return; }
+
+        const tax = price * 0.046;
+        const annualRent = rent * 12;
+        let actualInvestment = includeLoan && loanAmount > 0
+            ? price - loanAmount - deposit
+            : price - deposit;
+        let annualLoanInterest = 0;
+        if (includeLoan && loanAmount > 0 && loanRate > 0) {
+            annualLoanInterest = loanAmount * (loanRate / 100);
+        }
+        const netIncome = annualRent - annualLoanInterest;
+        const yieldRate = actualInvestment > 0 ? (netIncome / actualInvestment * 100) : 0;
+
+        document.getElementById('salePriceDisplay').textContent = fmt(price);
+        document.getElementById('taxDisplay').textContent = fmt(tax);
+        document.getElementById('annualRent').textContent = fmt(annualRent);
+
+        const loanRow = document.getElementById('loanInterestRow');
+        if (includeLoan && loanAmount > 0) {
+            loanRow.style.display = 'flex';
+            document.getElementById('annualLoanInterest').textContent = fmt(annualLoanInterest);
+        } else {
+            loanRow.style.display = 'none';
+        }
+
+        document.getElementById('actualInvestment').textContent = fmt(actualInvestment);
+        document.getElementById('yieldRate').textContent = yieldRate.toFixed(2) + '%';
+
+        let exp = `📊 수익률 계산 상세\n`;
+        exp = `매매가 ${koreanAmount(price)}에서 보증금 ${koreanAmount(deposit)}을 제외한 실투자금 ${koreanAmount(actualInvestment)}에 대해, `;
+        exp += `연간 임대수익 ${koreanAmount(annualRent)}`;
+        if (includeLoan && annualLoanInterest > 0) exp += ` - 대출이자 ${koreanAmount(annualLoanInterest)} = 순수익 ${koreanAmount(netIncome)}`;
+        exp += `으로 실질 수익률 <strong>${yieldRate.toFixed(2)}%</strong>가 산출되었습니다.`;
+        if (yieldRate >= 6) exp += ` ✅ 수익률이 양호한 수준입니다.`;
+        else if (yieldRate >= 4) exp += ` ℹ️ 평균적인 수익률 수준입니다.`;
+        else exp += ` ⚠️ 수익률이 낮은 편이니 투자 조건을 재검토해보세요.`;
+
+        const expEl = document.getElementById('yieldExplanation');
+        expEl.innerHTML = `<strong>💬 계산 결과 해설</strong>${exp}`;
+        document.getElementById('yieldResult').classList.add('show');
+    }
+
+    function resetYield() {
+        ['price','rent','deposit','loanAmount','loanRate'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('includeLoan').checked = false;
+        document.getElementById('loanSection').classList.remove('show');
+        document.getElementById('yieldResult').classList.remove('show');
+        document.querySelectorAll('#calc-0 .amount-preview').forEach(el => el.classList.remove('show'));
+    }
+
+    // ========== 임대료 인상 ==========
+    function calculateRentIncrease() {
+        const curDep = getVal('currentDeposit');
+        const curRent = getVal('currentRent');
+        const newDepInput = getVal('newDeposit');
+        const increaseRate = getVal('increaseRate');
+        const monthlyConvRate = getVal('monthlyConvRate'); // 월차임전환율 (예: 2%)
+        const baseRate = getVal('baseRate');               // 기준금리 (예: 2.5%)
+
+        if (curDep === 0 && curRent === 0) { alert('현재 보증금 또는 월세를 입력해주세요.'); return; }
+
+        // 렌트홈 공식: 환산전환율 = 월차임전환율 + 기준금리
+        const convRate = monthlyConvRate + baseRate; // 예: 2 + 2.5 = 4.5%
+
+        // 변경 후 보증금: 입력값 없으면 현재 보증금 그대로
+        const newDep = newDepInput > 0 ? newDepInput : curDep;
+
+        // 렌트홈 방식:
+        // 환산보증금(변경전) = 현재보증금 + (현재월세 × 12) / 전환율
+        const curEquivDep = curDep + (curRent * 12) / (convRate / 100);
+
+        // 5% 인상 후 최대 환산보증금
+        const maxEquivDep = curEquivDep * (1 + increaseRate / 100);
+
+        // 변경 후 월세 = (최대환산보증금 - 변경보증금) × 전환율 / 12
+        let newRent = (maxEquivDep - newDep) * (convRate / 100) / 12;
+        if (newRent < 0) newRent = 0;
+        newRent = Math.round(newRent);
+
+        document.getElementById('beforeDeposit').textContent = curDep.toLocaleString();
+        document.getElementById('afterDeposit').textContent = newDep.toLocaleString();
+        document.getElementById('beforeRent').textContent = curRent.toLocaleString();
+        document.getElementById('afterRent').textContent = newRent.toLocaleString();
+        document.getElementById('beforeAnnualRent').textContent = (curRent * 12).toLocaleString();
+        document.getElementById('afterAnnualRent').textContent = (newRent * 12).toLocaleString();
+
+        const depDiff = newDep - curDep;
+        let exp = `월차임전환시산정률 ${monthlyConvRate}% + 기준금리 ${baseRate}% = 적용 전환율 <strong>${convRate}%</strong><br>`;
+        exp += `현재 환산보증금: ${koreanAmount(Math.round(curEquivDep))} → ${increaseRate}% 인상 후 최대: <strong>${koreanAmount(Math.round(maxEquivDep))}</strong><br>`;
+        exp += `변경 보증금 ${koreanAmount(newDep)} 차감 후 월세: <strong>${newRent.toLocaleString()}원</strong> (연 ${koreanAmount(newRent * 12)})`;
+
+        document.getElementById('rentExplanation').innerHTML = `<strong>💬 계산 결과 해설</strong>${exp}`;
+        document.getElementById('rentResult').classList.add('show');
+    }
+
+    function resetRentIncrease() {
+        ['currentDeposit','currentRent','newDeposit'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('increaseRate').value = '5';
+        document.getElementById('monthlyConvRate').value = '2';
+        document.getElementById('baseRate').value = '2.5';
+        document.getElementById('rentResult').classList.remove('show');
+        document.querySelectorAll('#calc-1 .amount-preview').forEach(el => el.classList.remove('show'));
+    }
+
+    // ========== 중개수수료 ==========
+    function updateBrokerageInfo() {
+        const t = document.getElementById('brokeragePropertyType').value;
+        const info = {
+            'house': '거래금액에 따라 0.4~0.9%',
+            'officetel': '거래금액에 따라 0.4~0.9%',
+            'commercial': '거래금액에 따라 0.4~0.9% (상한 내 협의)',
+            'land': '거래금액에 따라 0.4~0.9% (상한 내 협의)'
+        };
+        document.getElementById('brokerageInfo').textContent = info[t] || '유형별 상한요율이 다릅니다';
+    }
+
+    function toggleRentFields() {
+        const isRent = document.getElementById('transactionType').value === 'rent';
+        document.getElementById('saleAmountGroup').style.display = isRent ? 'none' : 'block';
+        document.getElementById('rentDepositGroup').style.display = isRent ? 'block' : 'none';
+        document.getElementById('monthlyRentGroup').style.display = isRent ? 'block' : 'none';
+    }
+
+    function calculateBrokerage() {
+        const propType = document.getElementById('brokeragePropertyType').value;
+        const txType = document.getElementById('transactionType').value;
+        if (!propType) { alert('부동산 유형을 선택해주세요.'); return; }
+
+        let amount = 0;
+        if (txType === 'rent') {
+            const dep = getVal('rentDeposit');
+            const mr = getVal('monthlyRent');
+            if (dep === 0 && mr === 0) { alert('보증금 또는 월세를 입력해주세요.'); return; }
+            amount = dep + mr * 100;
+        } else {
+            amount = getVal('transactionAmount');
+            if (amount === 0) { alert('거래금액을 입력해주세요.'); return; }
+        }
+
+        let rate = 0.009;
+        if (propType === 'house' || propType === 'officetel') {
+            if (amount < 50000000) rate = 0.006;
+            else if (amount < 200000000) rate = 0.005;
+            else if (amount < 600000000) rate = 0.004;
+            else if (amount < 900000000) rate = 0.005;
+            else if (amount < 1200000000) rate = 0.006;
+            else if (amount < 1500000000) rate = 0.007;
+            else rate = 0.009;
+        }
+
+        const fee = amount * rate;
+        const vat = fee * 0.1;
+        const total = fee + vat;
+
+        document.getElementById('convertedAmount').textContent = fmt(amount);
+        document.getElementById('appliedRate').textContent = (rate * 100).toFixed(1) + '%';
+        document.getElementById('brokerageFee').textContent = fmt(fee);
+        document.getElementById('brokerageVat').textContent = fmt(vat);
+        document.getElementById('brokerageFeeTotal').textContent = fmt(total);
+
+        const typeNames = {'house':'주택','officetel':'오피스텔','commercial':'상가·점포','land':'토지'};
+        const txNames = {'sale':'매매','rent':'임대차'};
+        let exp = `${typeNames[propType]} ${txNames[txType]} 기준, `;
+        if (txType === 'rent') {
+            exp += `환산 거래금액 ${koreanAmount(amount)}(보증금 + 월세×100)에 `;
+        } else {
+            exp += `거래금액 ${koreanAmount(amount)}에 `;
+        }
+        exp += `상한요율 ${(rate*100).toFixed(1)}%를 적용한 중개보수 상한액은 <strong>${fmt(fee)}</strong>입니다. `;
+        exp += `여기에 부가세(VAT 10%) ${fmt(vat)}를 합산하면 실제 지불금액은 <strong>${fmt(total)}</strong>입니다.`;
+        exp += ` 단, 중개보수는 당사자 간 협의를 통해 상한액 이하에서 조정 가능합니다.`;
+
+        document.getElementById('brokerageExplanation').innerHTML = `<strong>💬 계산 결과 해설</strong>${exp}`;
+        document.getElementById('brokerageResult').classList.add('show');
+    }
+
+    function resetBrokerage() {
+        document.getElementById('brokeragePropertyType').value = '';
+        document.getElementById('transactionType').value = 'sale';
+        ['transactionAmount','rentDeposit','monthlyRent'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('brokerageInfo').textContent = '유형별 상한요율이 다릅니다';
+        document.getElementById('saleAmountGroup').style.display = 'block';
+        document.getElementById('rentDepositGroup').style.display = 'none';
+        document.getElementById('monthlyRentGroup').style.display = 'none';
+        document.getElementById('brokerageResult').classList.remove('show');
+        document.querySelectorAll('#calc-2 .amount-preview').forEach(el => el.classList.remove('show'));
+    }
+</script>
+</body>
+</html>
