@@ -286,6 +286,34 @@
             color: #d9b83f;
         }
 
+        /* 취득세 참고 표시 (수익률 계산과 무관, 약한 강조) */
+        .tax-reference {
+            margin-top: 14px;
+            padding-top: 10px;
+            border-top: 1px dashed #2a3653;
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 6px 10px;
+        }
+
+        .tax-reference-label {
+            font-size: 0.85em;
+            color: #7a86a3;
+        }
+
+        .tax-reference-value {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #aab4cc;
+        }
+
+        .tax-reference-note {
+            flex-basis: 100%;
+            font-size: 0.78em;
+            color: #6b7592;
+        }
+
         /* 결과 설명 박스 */
         .result-explanation {
             background: #111b32;
@@ -574,10 +602,6 @@
                     <span class="result-value" id="salePriceDisplay">0원</span>
                 </div>
                 <div class="result-item">
-                    <span class="result-label">취득세 (4.6%)</span>
-                    <span class="result-value" id="taxDisplay">0원</span>
-                </div>
-                <div class="result-item">
                     <span class="result-label">연간 임대수익</span>
                     <span class="result-value" id="annualRent">0원</span>
                 </div>
@@ -608,6 +632,11 @@
                         ※ 취득세는 참고용이며 수익률 계산에 포함되지 않습니다.<br>
                         ※ 실제 순수익률은 관리비, 재산세, 공실률 등을 추가로 고려해야 합니다.
                     </p>
+                </div>
+                <div class="tax-reference" id="taxReference">
+                    <span class="tax-reference-label">예상 취득세</span>
+                    <span class="tax-reference-value" id="taxDisplay">0원</span>
+                    <span class="tax-reference-note">취득세는 수익률 계산에 포함되지 않습니다.</span>
                 </div>
             </div>
         </div>
