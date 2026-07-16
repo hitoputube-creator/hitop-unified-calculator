@@ -785,27 +785,9 @@
             </div>
 
             <div class="input-group">
-                <label for="newDeposit">변경 후 보증금 (원)</label>
-                <input type="text" inputmode="numeric" id="newDeposit" placeholder="변경하려는 보증금 (그대로면 현재 보증금 입력)" oninput="fmtInput(this); showPreview(this, 'newDeposit-preview')">
-                <div class="amount-preview" id="newDeposit-preview"></div>
-            </div>
-
-            <div class="input-group">
                 <label for="increaseRate">임대료 인상률 (%)</label>
                 <input type="text" inputmode="decimal" id="increaseRate" value="5">
-                <small>주택임대차보호법 상한: 5% / 변경이 필요할 때만 수정하세요</small>
-            </div>
-
-            <div class="input-group">
-                <label for="monthlyConvRate">월차임전환시산정률 (%)</label>
-                <input type="text" inputmode="decimal" id="monthlyConvRate" value="2">
-                <small>법정 월차임전환율 (통상 2%)</small>
-            </div>
-
-            <div class="input-group">
-                <label for="baseRate">한국은행 기준금리 (%)</label>
-                <input type="text" inputmode="decimal" id="baseRate" value="2.5">
-                <small>현재 기준금리 입력 (2025년 기준 약 2.5%)</small>
+                <small>주택임대차보호법 상한: 최대 5%까지 입력 가능</small>
             </div>
 
             <div class="button-group">
@@ -838,8 +820,7 @@
                 </table>
                 <div class="result-explanation" id="rentExplanation"></div>
                 <div class="notice">
-                    주택임대차보호법 제7조의2에 따라 임대료 증액은 5%를 초과할 수 없습니다.<br>
-                    보증금 변경 시 전월세전환율을 적용하여 월세를 조정할 수 있습니다.
+                    주택임대차보호법 제7조의2에 따라 임대료 증액은 5%를 초과할 수 없습니다.
                 </div>
             </div>
         </div>
@@ -1293,54 +1274,34 @@
 
     // ========== 임대료 인상 ==========
     function calculateRentIncrease() {
-        const curDep = getVal('currentDeposit');
+        const deposit = getVal('currentDeposit');
         const curRent = getVal('currentRent');
-        const newDepInput = getVal('newDeposit');
         const increaseRate = getVal('increaseRate');
-        const monthlyConvRate = getVal('monthlyConvRate'); // 월차임전환율 (예: 2%)
-        const baseRate = getVal('baseRate');               // 기준금리 (예: 2.5%)
 
-        if (curDep === 0 && curRent === 0) { alert('현재 보증금 또는 월세를 입력해주세요.'); return; }
+        if (deposit === 0 && curRent === 0) { alert('임대보증금 또는 월 임대료를 입력해주세요.'); return; }
+        if (increaseRate > 5) { alert('임대료 인상률은 최대 5%까지 입력할 수 있습니다.'); return; }
 
-        // 렌트홈 공식: 환산전환율 = 월차임전환율 + 기준금리
-        const convRate = monthlyConvRate + baseRate; // 예: 2 + 2.5 = 4.5%
+        // 변경 후 월 임대료 = 현재 월 임대료 × (1 + 인상률 ÷ 100)
+        const newRent = Math.round(curRent * (1 + increaseRate / 100));
+        const beforeAnnualRent = curRent * 12;
+        const afterAnnualRent = newRent * 12;
 
-        // 변경 후 보증금: 입력값 없으면 현재 보증금 그대로
-        const newDep = newDepInput > 0 ? newDepInput : curDep;
-
-        // 렌트홈 방식:
-        // 환산보증금(변경전) = 현재보증금 + (현재월세 × 12) / 전환율
-        const curEquivDep = curDep + (curRent * 12) / (convRate / 100);
-
-        // 5% 인상 후 최대 환산보증금
-        const maxEquivDep = curEquivDep * (1 + increaseRate / 100);
-
-        // 변경 후 월세 = (최대환산보증금 - 변경보증금) × 전환율 / 12
-        let newRent = (maxEquivDep - newDep) * (convRate / 100) / 12;
-        if (newRent < 0) newRent = 0;
-        newRent = Math.round(newRent);
-
-        document.getElementById('beforeDeposit').textContent = curDep.toLocaleString();
-        document.getElementById('afterDeposit').textContent = newDep.toLocaleString();
+        document.getElementById('beforeDeposit').textContent = deposit.toLocaleString();
+        document.getElementById('afterDeposit').textContent = deposit.toLocaleString();
         document.getElementById('beforeRent').textContent = curRent.toLocaleString();
         document.getElementById('afterRent').textContent = newRent.toLocaleString();
-        document.getElementById('beforeAnnualRent').textContent = (curRent * 12).toLocaleString();
-        document.getElementById('afterAnnualRent').textContent = (newRent * 12).toLocaleString();
+        document.getElementById('beforeAnnualRent').textContent = beforeAnnualRent.toLocaleString();
+        document.getElementById('afterAnnualRent').textContent = afterAnnualRent.toLocaleString();
 
-        const depDiff = newDep - curDep;
-        let exp = `월차임전환시산정률 ${monthlyConvRate}% + 기준금리 ${baseRate}% = 적용 전환율 <strong>${convRate}%</strong><br>`;
-        exp += `현재 환산보증금: ${koreanAmount(Math.round(curEquivDep))} → ${increaseRate}% 인상 후 최대: <strong>${koreanAmount(Math.round(maxEquivDep))}</strong><br>`;
-        exp += `변경 보증금 ${koreanAmount(newDep)} 차감 후 월세: <strong>${newRent.toLocaleString()}원</strong> (연 ${koreanAmount(newRent * 12)})`;
+        const exp = `월 임대료 ${curRent.toLocaleString()}원에 ${increaseRate}%를 적용하여 변경 후 월 임대료는 <strong>${newRent.toLocaleString()}원</strong>입니다. (연 임대료 ${afterAnnualRent.toLocaleString()}원)`;
 
         document.getElementById('rentExplanation').innerHTML = `<strong>💬 계산 결과 해설</strong>${exp}`;
         document.getElementById('rentResult').classList.add('show');
     }
 
     function resetRentIncrease() {
-        ['currentDeposit','currentRent','newDeposit'].forEach(id => document.getElementById(id).value = '');
+        ['currentDeposit','currentRent'].forEach(id => document.getElementById(id).value = '');
         document.getElementById('increaseRate').value = '5';
-        document.getElementById('monthlyConvRate').value = '2';
-        document.getElementById('baseRate').value = '2.5';
         document.getElementById('rentResult').classList.remove('show');
         document.querySelectorAll('#calc-1 .amount-preview').forEach(el => el.classList.remove('show'));
     }
