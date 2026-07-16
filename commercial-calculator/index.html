@@ -314,6 +314,94 @@
             color: #6b7592;
         }
 
+        /* 대출 비교 분석 */
+        .loan-compare {
+            display: none;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #2a3653;
+        }
+        .loan-compare.show { display: block; }
+
+        .loan-compare-title {
+            font-size: 1.1em;
+            color: #f3f6ff;
+            margin-bottom: 14px;
+        }
+
+        .loan-compare-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .loan-compare-card {
+            background: #0d162b;
+            border: 1px solid #2a3653;
+            border-radius: 10px;
+            padding: 16px;
+            min-width: 0;
+        }
+
+        .loan-compare-card-title {
+            font-weight: 700;
+            color: #d9b83f;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+
+        .loan-compare-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 6px 0;
+            font-size: 0.88em;
+            color: #aab4cc;
+            border-bottom: 1px solid #18233d;
+            gap: 8px;
+        }
+        .loan-compare-row:last-child { border-bottom: none; }
+        .loan-compare-row span:last-child {
+            color: #f3f6ff;
+            font-weight: 600;
+            text-align: right;
+            word-break: break-all;
+        }
+        .loan-compare-row.highlight span:last-child {
+            color: #d9b83f;
+            font-size: 1.1em;
+        }
+
+        .loan-compare-summary {
+            margin-top: 16px;
+            background: #18233d;
+            border: 1px solid #2a3653;
+            border-radius: 8px;
+            padding: 14px 16px;
+            font-size: 0.92em;
+            color: #dbe1f5;
+            line-height: 1.8;
+        }
+        .loan-compare-summary strong { color: #d9b83f; }
+
+        .loan-compare-analysis {
+            margin-top: 10px;
+            padding: 12px 14px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+        .loan-compare-analysis.positive {
+            background: rgba(217, 184, 63, 0.08);
+            border-left: 3px solid #d9b83f;
+            color: #f0dfa0;
+        }
+        .loan-compare-analysis.negative {
+            background: rgba(229, 72, 77, 0.12);
+            border-left: 3px solid #e5484d;
+            color: #ffb4b0;
+        }
+
         /* 결과 설명 박스 */
         .result-explanation {
             background: #111b32;
@@ -526,6 +614,9 @@
                 width: 100%;
                 text-align: center;
             }
+            .loan-compare-cards {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -638,6 +729,31 @@
                     <span class="tax-reference-value" id="taxDisplay">0원</span>
                     <span class="tax-reference-note">취득세는 수익률 계산에 포함되지 않습니다.</span>
                 </div>
+            </div>
+
+            <!-- 대출 있음 선택 시에만 표시되는 대출 비교 분석 -->
+            <div class="loan-compare" id="loanCompare">
+                <h3 class="loan-compare-title">📊 대출 비교 분석</h3>
+                <div class="loan-compare-cards">
+                    <div class="loan-compare-card">
+                        <div class="loan-compare-card-title">대출 없음</div>
+                        <div class="loan-compare-row"><span>실투자금</span><span id="cmpNoLoanInvestment">0원</span></div>
+                        <div class="loan-compare-row"><span>연 임대수익</span><span id="cmpNoLoanRent">0원</span></div>
+                        <div class="loan-compare-row"><span>연 대출이자</span><span id="cmpNoLoanInterest">0원</span></div>
+                        <div class="loan-compare-row"><span>연 순수익</span><span id="cmpNoLoanNetIncome">0원</span></div>
+                        <div class="loan-compare-row highlight"><span>연 수익률</span><span id="cmpNoLoanYield">0%</span></div>
+                    </div>
+                    <div class="loan-compare-card">
+                        <div class="loan-compare-card-title">대출 있음</div>
+                        <div class="loan-compare-row"><span>실투자금</span><span id="cmpLoanInvestment">0원</span></div>
+                        <div class="loan-compare-row"><span>연 임대수익</span><span id="cmpLoanRent">0원</span></div>
+                        <div class="loan-compare-row"><span>연 대출이자</span><span id="cmpLoanInterest">0원</span></div>
+                        <div class="loan-compare-row"><span>연 순수익</span><span id="cmpLoanNetIncome">0원</span></div>
+                        <div class="loan-compare-row highlight"><span>연 수익률</span><span id="cmpLoanYield">0%</span></div>
+                    </div>
+                </div>
+                <div class="loan-compare-summary" id="loanCompareSummary"></div>
+                <div class="loan-compare-analysis" id="loanCompareAnalysis"></div>
             </div>
         </div>
 
@@ -1090,6 +1206,68 @@
         const expEl = document.getElementById('yieldExplanation');
         expEl.innerHTML = `<strong>💬 계산 결과 해설</strong>${exp}`;
         document.getElementById('yieldResult').classList.add('show');
+
+        renderLoanCompare(includeLoan && loanAmount > 0, price, deposit, annualRent, loanAmount, annualLoanInterest, actualInvestment, netIncome, yieldRate);
+    }
+
+    // 대출 있음 선택 시 동일 조건의 '대출 없음' 결과와 비교 분석
+    function renderLoanCompare(shouldShow, price, deposit, annualRent, loanAmount, annualLoanInterest, loanInvestment, loanNetIncome, loanYieldRate) {
+        const compareEl = document.getElementById('loanCompare');
+        if (!shouldShow) {
+            compareEl.classList.remove('show');
+            return;
+        }
+
+        const noLoanInvestment = price - deposit;
+        const noLoanInterest = 0;
+        const noLoanNetIncome = annualRent;
+        const noLoanYieldRate = noLoanInvestment > 0 ? (noLoanNetIncome / noLoanInvestment * 100) : 0;
+
+        document.getElementById('cmpNoLoanInvestment').textContent = fmt(noLoanInvestment);
+        document.getElementById('cmpNoLoanRent').textContent = fmt(annualRent);
+        document.getElementById('cmpNoLoanInterest').textContent = fmt(noLoanInterest);
+        document.getElementById('cmpNoLoanNetIncome').textContent = fmt(noLoanNetIncome);
+        document.getElementById('cmpNoLoanYield').textContent = noLoanYieldRate.toFixed(2) + '%';
+
+        document.getElementById('cmpLoanInvestment').textContent = fmt(loanInvestment);
+        document.getElementById('cmpLoanRent').textContent = fmt(annualRent);
+        document.getElementById('cmpLoanInterest').textContent = fmt(annualLoanInterest);
+        document.getElementById('cmpLoanNetIncome').textContent = fmt(loanNetIncome);
+        document.getElementById('cmpLoanYield').textContent = loanYieldRate.toFixed(2) + '%';
+
+        const equityReduction = noLoanInvestment - loanInvestment; // 초기 자기자본 절감액 (= 대출금)
+        const netIncomeDiff = loanNetIncome - noLoanNetIncome;     // 연 순수익 차이
+        const yieldDiffPp = loanYieldRate - noLoanYieldRate;       // 수익률 차이 (%p)
+
+        let netIncomeLine;
+        if (netIncomeDiff < 0) netIncomeLine = `연 순수익은 대출 없음보다 ${koreanAmount(Math.abs(netIncomeDiff))} 감소합니다.`;
+        else if (netIncomeDiff > 0) netIncomeLine = `연 순수익은 대출 없음보다 ${koreanAmount(Math.abs(netIncomeDiff))} 증가합니다.`;
+        else netIncomeLine = `연 순수익은 대출 없음과 동일합니다.`;
+
+        let yieldLine;
+        if (yieldDiffPp > 0) yieldLine = `자기자본 수익률은 ${noLoanYieldRate.toFixed(2)}%에서 ${loanYieldRate.toFixed(2)}%로 ${Math.abs(yieldDiffPp).toFixed(2)}%p 상승합니다.`;
+        else if (yieldDiffPp < 0) yieldLine = `자기자본 수익률은 ${noLoanYieldRate.toFixed(2)}%에서 ${loanYieldRate.toFixed(2)}%로 ${Math.abs(yieldDiffPp).toFixed(2)}%p 하락합니다.`;
+        else yieldLine = `자기자본 수익률은 ${loanYieldRate.toFixed(2)}%로 변동이 없습니다.`;
+
+        document.getElementById('loanCompareSummary').innerHTML =
+            `- 대출 이용 시 초기 자기자본이 ${koreanAmount(equityReduction)} 줄어듭니다.<br>` +
+            `- 연간 대출이자는 ${koreanAmount(annualLoanInterest)}입니다.<br>` +
+            `- ${netIncomeLine}<br>` +
+            `- ${yieldLine}`;
+
+        const analysisEl = document.getElementById('loanCompareAnalysis');
+        if (loanNetIncome <= 0) {
+            analysisEl.textContent = '대출이자 부담으로 연 순수익이 0 이하입니다. 대출 조건을 다시 확인하세요.';
+            analysisEl.className = 'loan-compare-analysis negative';
+        } else if (yieldDiffPp > 0) {
+            analysisEl.textContent = '대출을 활용하면 자기자본 투입액이 줄어 자기자본 수익률은 높아지지만, 연간 이자 부담으로 순수익은 감소합니다.';
+            analysisEl.className = 'loan-compare-analysis positive';
+        } else {
+            analysisEl.textContent = '대출이자 부담이 커 대출 활용 시 자기자본 수익률이 낮아집니다.';
+            analysisEl.className = 'loan-compare-analysis negative';
+        }
+
+        compareEl.classList.add('show');
     }
 
     function resetYield() {
@@ -1097,6 +1275,7 @@
         document.getElementById('includeLoan').checked = false;
         document.getElementById('loanSection').classList.remove('show');
         document.getElementById('yieldResult').classList.remove('show');
+        document.getElementById('loanCompare').classList.remove('show');
         document.querySelectorAll('#calc-0 .amount-preview').forEach(el => el.classList.remove('show'));
         document.getElementById('rentWarning').classList.remove('show');
         document.getElementById('depositWarning').classList.remove('show');
