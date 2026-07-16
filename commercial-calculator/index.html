@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>하이탑부동산 상가 계산기</title>
+    <title>하이탑 부동산 전용 계산기</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,8 @@
 
         body {
             font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #081225;
+            color: #f3f6ff;
             min-height: 100vh;
             padding: 20px;
         }
@@ -25,7 +26,7 @@
 
         header {
             text-align: center;
-            color: white;
+            color: #f3f6ff;
             margin-bottom: 40px;
             padding: 40px 20px;
         }
@@ -33,25 +34,25 @@
         h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            color: #f3f6ff;
         }
 
         .subtitle {
             font-size: 1.1em;
-            opacity: 0.95;
+            color: #aab4cc;
         }
 
         .tab-container {
-            background: white;
+            background: #131d35;
+            border: 1px solid #2a3653;
             border-radius: 15px 15px 0 0;
             overflow: hidden;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
         }
 
         .tabs {
             display: flex;
-            background: #f8f9fa;
-            border-bottom: 2px solid #e9ecef;
+            background: #0d162b;
+            border-bottom: 2px solid #2a3653;
             flex-wrap: wrap;
         }
 
@@ -64,25 +65,25 @@
             border: none;
             background: none;
             font-size: 0.9em;
-            color: #666;
+            color: #aab4cc;
             min-width: 80px;
         }
 
         .tab:hover {
-            background: #e9ecef;
+            background: #18233d;
         }
 
         .tab.active {
-            background: white;
-            color: #667eea;
+            background: #131d35;
+            color: #d9b83f;
             font-weight: bold;
-            border-bottom: 3px solid #667eea;
+            border-bottom: 3px solid #d9b83f;
         }
 
         .calculator {
             display: none;
             padding: 40px;
-            background: white;
+            background: #131d35;
         }
 
         .calculator.active {
@@ -90,13 +91,13 @@
         }
 
         .calculator h2 {
-            color: #333;
+            color: #f3f6ff;
             margin-bottom: 10px;
             font-size: 1.8em;
         }
 
         .calculator > p {
-            color: #666;
+            color: #aab4cc;
             margin-bottom: 30px;
         }
 
@@ -107,7 +108,7 @@
         .input-group label {
             display: block;
             margin-bottom: 8px;
-            color: #333;
+            color: #f3f6ff;
             font-weight: 500;
         }
 
@@ -115,22 +116,34 @@
         .input-group select {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e9ecef;
+            background: #0d162b;
+            border: 2px solid #2a3653;
             border-radius: 8px;
+            color: #f3f6ff;
             font-size: 1em;
             transition: border-color 0.3s;
+        }
+
+        .input-group input::placeholder {
+            color: #7a86a3;
+            opacity: 1;
+        }
+
+        .input-group select option {
+            background: #131d35;
+            color: #f3f6ff;
         }
 
         .input-group input:focus,
         .input-group select:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #d9b83f;
         }
 
         .input-group small {
             display: block;
             margin-top: 5px;
-            color: #999;
+            color: #aab4cc;
             font-size: 0.9em;
         }
 
@@ -139,9 +152,9 @@
             display: none;
             margin-top: 6px;
             padding: 6px 10px;
-            background: #f0f4ff;
+            background: #18233d;
             border-radius: 6px;
-            color: #667eea;
+            color: #d9b83f;
             font-size: 0.95em;
             font-weight: 600;
         }
@@ -162,32 +175,32 @@
             border-radius: 8px;
             font-size: 1.1em;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             font-weight: bold;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: #d9b83f;
+            color: #081225;
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            background: #e5c553;
         }
 
         .btn-secondary {
-            background: #e9ecef;
-            color: #666;
+            background: #18233d;
+            color: #f3f6ff;
+            border: 1px solid #2a3653;
         }
 
         .btn-secondary:hover {
-            background: #dee2e6;
+            background: #22304f;
         }
 
         .result {
             display: none;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            background: #18233d;
             padding: 30px;
             border-radius: 12px;
             margin-top: 30px;
@@ -195,11 +208,11 @@
 
         .result.show {
             display: block;
-            animation: slideIn 0.5s;
+            animation: slideIn 0.4s;
         }
 
         @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -209,9 +222,9 @@
             align-items: center;
             padding: 15px;
             margin-bottom: 10px;
-            background: white;
+            background: #0d162b;
+            border: 1px solid #2a3653;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         .result-item:last-child {
@@ -219,56 +232,58 @@
         }
 
         .result-label {
-            color: #666;
+            color: #aab4cc;
             font-weight: 500;
         }
 
         .result-value {
-            color: #667eea;
+            color: #f3f6ff;
             font-weight: bold;
             font-size: 1.2em;
         }
 
         .highlight {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: #d9b83f;
+            border-color: #d9b83f;
+            color: #081225;
             font-size: 1.2em;
         }
 
         .highlight .result-label,
         .highlight .result-value {
-            color: white !important;
+            color: #081225 !important;
         }
 
         .notice {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
+            background: #18233d;
+            border-left: 4px solid #d9b83f;
             padding: 15px;
             margin-top: 20px;
             border-radius: 4px;
-            color: #856404;
+            color: #dbe1f5;
         }
 
         .notice strong {
             display: block;
             margin-bottom: 5px;
+            color: #d9b83f;
         }
 
         /* 결과 설명 박스 */
         .result-explanation {
-            background: #e8f4fd;
-            border-left: 4px solid #667eea;
+            background: #111b32;
+            border-left: 4px solid #d9b83f;
             padding: 15px;
             margin-top: 15px;
             border-radius: 4px;
-            color: #334;
+            color: #dbe1f5;
             font-size: 0.95em;
             line-height: 1.7;
         }
         .result-explanation strong {
             display: block;
             margin-bottom: 6px;
-            color: #667eea;
+            color: #d9b83f;
         }
 
         table {
@@ -280,27 +295,14 @@
         th, td {
             padding: 12px;
             text-align: center;
-            border: 1px solid #dee2e6;
+            border: 1px solid #2a3653;
+            color: #f3f6ff;
         }
 
         th {
-            background: #f8f9fa;
+            background: #18233d;
             font-weight: bold;
-            color: #333;
-        }
-
-        footer {
-            text-align: center;
-            color: white;
-            margin-top: 40px;
-            padding: 20px;
-            opacity: 0.9;
-        }
-
-        footer a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
+            color: #f3f6ff;
         }
 
         .toggle-container {
@@ -309,7 +311,7 @@
             gap: 10px;
             margin-bottom: 20px;
             padding: 15px;
-            background: #f8f9fa;
+            background: #18233d;
             border-radius: 8px;
         }
 
@@ -329,7 +331,7 @@
             position: absolute;
             cursor: pointer;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #ccc;
+            background-color: #2a3653;
             transition: .4s;
             border-radius: 30px;
         }
@@ -341,38 +343,151 @@
             width: 22px;
             left: 4px;
             bottom: 4px;
-            background-color: white;
+            background-color: #f3f6ff;
             transition: .4s;
             border-radius: 50%;
         }
 
-        input:checked + .slider { background-color: #667eea; }
-        input:checked + .slider:before { transform: translateX(30px); }
+        input:checked + .slider { background-color: #d9b83f; }
+        input:checked + .slider:before { transform: translateX(30px); background-color: #081225; }
 
         .loan-section {
             display: none;
             padding: 20px;
-            background: #f8f9fa;
+            background: #18233d;
             border-radius: 8px;
             margin-top: 15px;
-            border: 2px solid #667eea;
+            border: 2px solid #d9b83f;
         }
 
         .loan-section.show { display: block; }
 
+        /* 전세·월세 선택 탭 (주택·아파트 임대 계산기) */
+        .sub-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+
+        .sub-tab {
+            flex: 1;
+            padding: 13px 10px;
+            border: 2px solid #2a3653;
+            border-radius: 8px;
+            background: #0d162b;
+            color: #aab4cc;
+            font-size: 1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .sub-tab:hover {
+            border-color: #d9b83f;
+            color: #d9b83f;
+        }
+
+        .sub-tab.active {
+            background: #d9b83f;
+            border-color: #d9b83f;
+            color: #081225;
+        }
+
+        .housing-panel { display: none; }
+        .housing-panel.active { display: block; }
+
+        /* 하단 홈페이지 홍보 영역 */
+        .footer-promo {
+            margin: 30px 0 10px;
+            background: #111b32;
+            border: 1px solid #d9b83f;
+            border-radius: 12px;
+            padding: 22px 26px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-promo-info { min-width: 0; }
+
+        .footer-promo-eyebrow {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: #d9b83f;
+            margin-bottom: 6px;
+        }
+
+        .footer-promo-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #f3f6ff;
+            margin-bottom: 6px;
+        }
+
+        .footer-promo-desc {
+            font-size: 13px;
+            color: #aab4cc;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .footer-promo-phone {
+            font-size: 15px;
+            font-weight: 700;
+            color: #d9b83f;
+            text-decoration: none;
+        }
+
+        .footer-promo-phone:hover { text-decoration: underline; }
+
+        .footer-home-link {
+            flex-shrink: 0;
+            display: inline-block;
+            background: #d9b83f;
+            color: #081225;
+            font-weight: 800;
+            font-size: 14px;
+            padding: 13px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+
+        .footer-home-link:hover { background: #e5c553; }
+
+        .footer-home-link:focus-visible {
+            outline: 3px solid #e5c553;
+            outline-offset: 2px;
+        }
+
         @media (max-width: 768px) {
             h1 { font-size: 1.8em; }
-            .tab { flex-basis: 33.33%; padding: 12px 6px; font-size: 0.78em; }
+            .tab { flex-basis: 50%; padding: 12px 6px; font-size: 0.78em; }
             .calculator { padding: 20px; }
             .result-item { flex-direction: column; gap: 5px; }
+            .footer-promo {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+                padding: 20px;
+            }
+            .footer-home-link {
+                width: 100%;
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
 <div class="container">
     <header>
-        <h1>📊 하이탑부동산 상가 계산기</h1>
-        <p class="subtitle">상가 수익률, 임대료 인상, 중개수수료를 한곳에서 계산하세요</p>
+        <h1>📊 하이탑 부동산 전용 계산기</h1>
+        <p class="subtitle">상가 수익률, 임대료 인상, 중개수수료, 주택·아파트 임대 중개보수를 계산하세요</p>
     </header>
 
     <div class="tab-container">
@@ -380,6 +495,7 @@
             <button class="tab active" onclick="switchTab(0)">📈 상가 수익률</button>
             <button class="tab" onclick="switchTab(1)">📊 임대료 인상</button>
             <button class="tab" onclick="switchTab(2)">🤝 중개수수료</button>
+            <button class="tab" onclick="switchTab(3)">🏠 주택·아파트 임대</button>
         </div>
 
         <!-- ===== 상가 수익률 계산기 ===== -->
@@ -649,10 +765,120 @@
                 </div>
             </div>
         </div>
+
+        <!-- ===== 주택·아파트 임대 중개보수 계산기 ===== -->
+        <div class="calculator" id="calc-3">
+            <h2>주택·아파트 임대 중개보수</h2>
+            <p>전세 또는 월세를 선택해 주택·아파트 임대차 중개보수 상한액을 계산합니다</p>
+
+            <div class="sub-tabs">
+                <button class="sub-tab active" id="subtab-jeonse" onclick="switchHousingType('jeonse')">전세</button>
+                <button class="sub-tab" id="subtab-wolse" onclick="switchHousingType('wolse')">월세</button>
+            </div>
+
+            <!-- 전세 -->
+            <div class="housing-panel active" id="housing-jeonse">
+                <div class="input-group">
+                    <label for="jeonseDeposit">전세보증금 (원)</label>
+                    <input type="text" inputmode="numeric" id="jeonseDeposit" placeholder="예: 300,000,000" oninput="fmtInput(this); showPreview(this, 'jeonseDeposit-preview')">
+                    <div class="amount-preview" id="jeonseDeposit-preview"></div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-primary" onclick="calculateJeonseFee()">계산하기</button>
+                    <button class="btn-secondary" onclick="resetJeonse()">초기화</button>
+                </div>
+
+                <div class="result" id="jeonseResult">
+                    <div class="result-item">
+                        <span class="result-label">거래금액</span>
+                        <span class="result-value" id="jeonseAmount">0원</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">적용 요율</span>
+                        <span class="result-value" id="jeonseRate">0%</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">법정 한도액</span>
+                        <span class="result-value" id="jeonseCap">한도 없음</span>
+                    </div>
+                    <div class="result-item highlight">
+                        <span class="result-label">최대 중개보수</span>
+                        <span class="result-value" id="jeonseFee">0원</span>
+                    </div>
+                    <div class="result-explanation" id="jeonseExplanation"></div>
+                    <div class="notice">
+                        <strong>💡 부가세 안내</strong>
+                        위 금액은 중개보수 상한액이며, 부가세(VAT 10%)는 별도입니다. 중개보수는 상한액 이내에서 당사자 간 협의를 통해 조정 가능합니다.
+                    </div>
+                </div>
+            </div>
+
+            <!-- 월세 -->
+            <div class="housing-panel" id="housing-wolse">
+                <div class="input-group">
+                    <label for="wolseDeposit">보증금 (원)</label>
+                    <input type="text" inputmode="numeric" id="wolseDeposit" placeholder="예: 50,000,000" oninput="fmtInput(this); showPreview(this, 'wolseDeposit-preview')">
+                    <div class="amount-preview" id="wolseDeposit-preview"></div>
+                </div>
+
+                <div class="input-group">
+                    <label for="wolseRent">월세 (원)</label>
+                    <input type="text" inputmode="numeric" id="wolseRent" placeholder="예: 1,000,000" oninput="fmtInput(this); showPreview(this, 'wolseRent-preview')">
+                    <div class="amount-preview" id="wolseRent-preview"></div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-primary" onclick="calculateWolseFee()">계산하기</button>
+                    <button class="btn-secondary" onclick="resetWolse()">초기화</button>
+                </div>
+
+                <div class="result" id="wolseResult">
+                    <div class="result-item">
+                        <span class="result-label">환산 거래금액</span>
+                        <span class="result-value" id="wolseAmount">0원</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">적용된 환산 방식</span>
+                        <span class="result-value" id="wolseMethod">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">적용 요율</span>
+                        <span class="result-value" id="wolseRate">0%</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">법정 한도액</span>
+                        <span class="result-value" id="wolseCap">한도 없음</span>
+                    </div>
+                    <div class="result-item highlight">
+                        <span class="result-label">최대 중개보수</span>
+                        <span class="result-value" id="wolseFee">0원</span>
+                    </div>
+                    <div class="result-explanation" id="wolseExplanation"></div>
+                    <div class="notice">
+                        <strong>💡 부가세 안내</strong>
+                        위 금액은 중개보수 상한액이며, 부가세(VAT 10%)는 별도입니다. 중개보수는 상한액 이내에서 당사자 간 협의를 통해 조정 가능합니다.
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <footer>
-        <p><strong>하이탑부동산</strong> · <a href="tel:031-949-8969">031-949-8969</a></p>
+    <footer class="footer-promo">
+        <div class="footer-promo-info">
+            <div class="footer-promo-eyebrow">하이탑부동산 제공</div>
+            <div class="footer-promo-title">하이탑부동산이 만든 부동산 전용 계산기</div>
+            <p class="footer-promo-desc">상가 수익률, 임대료 인상, 중개보수와 주택 임대차 중개보수를 한 번에 계산할 수 있습니다.</p>
+            <a href="tel:031-949-8969" class="footer-promo-phone">031-949-8969</a>
+        </div>
+        <a
+            href="https://hitoprealty.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="footer-home-link"
+        >
+            하이탑부동산 홈페이지 바로가기 →
+        </a>
     </footer>
 </div>
 
@@ -914,6 +1140,99 @@
         document.getElementById('monthlyRentGroup').style.display = 'none';
         document.getElementById('brokerageResult').classList.remove('show');
         document.querySelectorAll('#calc-2 .amount-preview').forEach(el => el.classList.remove('show'));
+    }
+
+    // ========== 주택·아파트 임대 중개보수 ==========
+    function switchHousingType(type) {
+        document.getElementById('subtab-jeonse').classList.toggle('active', type === 'jeonse');
+        document.getElementById('subtab-wolse').classList.toggle('active', type === 'wolse');
+        document.getElementById('housing-jeonse').classList.toggle('active', type === 'jeonse');
+        document.getElementById('housing-wolse').classList.toggle('active', type === 'wolse');
+    }
+
+    // 주택 임대차 중개보수 요율표 (전세·월세 공통)
+    function getHousingRentalRate(amount) {
+        if (amount < 50000000) return { rate: 0.005, cap: 200000, label: '5천만원 미만' };
+        if (amount < 100000000) return { rate: 0.004, cap: 300000, label: '5천만원 이상 1억원 미만' };
+        if (amount < 600000000) return { rate: 0.003, cap: 0, label: '1억원 이상 6억원 미만' };
+        if (amount < 1200000000) return { rate: 0.004, cap: 0, label: '6억원 이상 12억원 미만' };
+        if (amount < 1500000000) return { rate: 0.005, cap: 0, label: '12억원 이상 15억원 미만' };
+        return { rate: 0.006, cap: 0, label: '15억원 이상' };
+    }
+
+    function calculateJeonseFee() {
+        const deposit = getVal('jeonseDeposit');
+        if (deposit === 0) { alert('전세보증금을 입력해주세요.'); return; }
+
+        const { rate, cap, label } = getHousingRentalRate(deposit);
+        const rawFee = deposit * rate;
+        const capped = cap > 0 && rawFee > cap;
+        const fee = capped ? cap : rawFee;
+
+        document.getElementById('jeonseAmount').textContent = fmt(deposit);
+        document.getElementById('jeonseRate').textContent = (rate * 100).toFixed(1) + '%';
+        document.getElementById('jeonseCap').textContent = cap > 0 ? fmt(cap) : '한도 없음';
+        document.getElementById('jeonseFee').textContent = fmt(fee);
+
+        let exp = `전세보증금 ${koreanAmount(deposit)}은 ${label} 구간으로 요율 <strong>${(rate * 100).toFixed(1)}%</strong>가 적용되어 계산액은 ${fmt(rawFee)}입니다. `;
+        if (capped) {
+            exp += `법정 한도액 <strong>${fmt(cap)}</strong>을 초과하여 한도액이 최종 중개보수로 적용됩니다.`;
+        } else if (cap > 0) {
+            exp += `법정 한도액 ${fmt(cap)} 이내이므로 계산된 금액이 그대로 최대 중개보수입니다.`;
+        } else {
+            exp += `해당 구간은 한도액이 없어 계산된 금액이 그대로 최대 중개보수입니다.`;
+        }
+
+        document.getElementById('jeonseExplanation').innerHTML = `<strong>💬 계산 결과 해설</strong>${exp}`;
+        document.getElementById('jeonseResult').classList.add('show');
+    }
+
+    function resetJeonse() {
+        document.getElementById('jeonseDeposit').value = '';
+        document.getElementById('jeonseResult').classList.remove('show');
+        document.querySelectorAll('#housing-jeonse .amount-preview').forEach(el => el.classList.remove('show'));
+    }
+
+    function calculateWolseFee() {
+        const dep = getVal('wolseDeposit');
+        const rent = getVal('wolseRent');
+        if (dep === 0 && rent === 0) { alert('보증금 또는 월세를 입력해주세요.'); return; }
+
+        let amount = dep + rent * 100;
+        let method = '월세 × 100';
+        if (amount < 50000000) {
+            amount = dep + rent * 70;
+            method = '월세 × 70';
+        }
+
+        const { rate, cap, label } = getHousingRentalRate(amount);
+        const rawFee = amount * rate;
+        const capped = cap > 0 && rawFee > cap;
+        const fee = capped ? cap : rawFee;
+
+        document.getElementById('wolseAmount').textContent = fmt(amount);
+        document.getElementById('wolseMethod').textContent = method;
+        document.getElementById('wolseRate').textContent = (rate * 100).toFixed(1) + '%';
+        document.getElementById('wolseCap').textContent = cap > 0 ? fmt(cap) : '한도 없음';
+        document.getElementById('wolseFee').textContent = fmt(fee);
+
+        let exp = `보증금 ${koreanAmount(dep)}에 월세 ${koreanAmount(rent)}를 (${method})으로 환산한 거래금액은 ${koreanAmount(amount)}이며, ${label} 구간 요율 <strong>${(rate * 100).toFixed(1)}%</strong>가 적용되어 계산액은 ${fmt(rawFee)}입니다. `;
+        if (capped) {
+            exp += `법정 한도액 <strong>${fmt(cap)}</strong>을 초과하여 한도액이 최종 중개보수로 적용됩니다.`;
+        } else if (cap > 0) {
+            exp += `법정 한도액 ${fmt(cap)} 이내이므로 계산된 금액이 그대로 최대 중개보수입니다.`;
+        } else {
+            exp += `해당 구간은 한도액이 없어 계산된 금액이 그대로 최대 중개보수입니다.`;
+        }
+
+        document.getElementById('wolseExplanation').innerHTML = `<strong>💬 계산 결과 해설</strong>${exp}`;
+        document.getElementById('wolseResult').classList.add('show');
+    }
+
+    function resetWolse() {
+        ['wolseDeposit', 'wolseRent'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('wolseResult').classList.remove('show');
+        document.querySelectorAll('#housing-wolse .amount-preview').forEach(el => el.classList.remove('show'));
     }
 </script>
 </body>
