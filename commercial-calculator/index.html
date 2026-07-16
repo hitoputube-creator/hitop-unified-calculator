@@ -162,6 +162,23 @@
             display: block;
         }
 
+        /* 입력값 경고 (금액 단위 오입력 방지) */
+        .input-warning {
+            display: none;
+            margin-top: 8px;
+            padding: 10px 12px;
+            background: #2b1418;
+            border-left: 4px solid #e5484d;
+            border-radius: 4px;
+            color: #ffb4b0;
+            font-size: 0.9em;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+        .input-warning.show {
+            display: block;
+        }
+
         .button-group {
             display: flex;
             gap: 10px;
@@ -513,20 +530,22 @@
 
             <div class="input-group">
                 <label for="price">매매가 (원)</label>
-                <input type="text" inputmode="numeric" id="price" placeholder="예: 300,000,000" oninput="fmtInput(this); showPreview(this, 'price-preview')">
+                <input type="text" inputmode="numeric" id="price" placeholder="예: 300,000,000" oninput="fmtInput(this); showPreview(this, 'price-preview'); checkRentWarning(); checkDepositWarning()">
                 <div class="amount-preview" id="price-preview"></div>
             </div>
 
             <div class="input-group">
                 <label for="rent">월 임대료 (원)</label>
-                <input type="text" inputmode="numeric" id="rent" placeholder="예: 1,500,000" oninput="fmtInput(this); showPreview(this, 'rent-preview')">
+                <input type="text" inputmode="numeric" id="rent" placeholder="예: 3,000,000 (월 300만원)" oninput="fmtInput(this); showPreview(this, 'rent-preview'); checkRentWarning()">
                 <div class="amount-preview" id="rent-preview"></div>
+                <div class="input-warning" id="rentWarning"></div>
             </div>
 
             <div class="input-group">
                 <label for="deposit">보증금 (원)</label>
-                <input type="text" inputmode="numeric" id="deposit" placeholder="예: 50,000,000" oninput="fmtInput(this); showPreview(this, 'deposit-preview')">
+                <input type="text" inputmode="numeric" id="deposit" placeholder="예: 20,000,000 (2,000만원)" oninput="fmtInput(this); showPreview(this, 'deposit-preview'); checkDepositWarning()">
                 <div class="amount-preview" id="deposit-preview"></div>
+                <div class="input-warning" id="depositWarning"></div>
             </div>
 
             <div class="loan-section" id="loanSection">
@@ -549,6 +568,7 @@
             </div>
 
             <div class="result" id="yieldResult">
+                <div class="result-explanation" id="yieldInputSummary"></div>
                 <div class="result-item">
                     <span class="result-label">매매가</span>
                     <span class="result-value" id="salePriceDisplay">0원</span>
@@ -959,6 +979,32 @@
         }
     }
 
+    // 월 임대료가 매매가 대비 비정상적으로 큰 경우 경고 (금액 단위 오입력 방지)
+    function checkRentWarning() {
+        const price = getVal('price');
+        const rent = getVal('rent');
+        const warningEl = document.getElementById('rentWarning');
+        if (price > 0 && rent > 0 && rent >= price * 0.05) {
+            warningEl.textContent = '⚠️ 월 임대료가 매우 크게 입력되었습니다. 금액 단위를 확인해주세요.';
+            warningEl.classList.add('show');
+        } else {
+            warningEl.classList.remove('show');
+        }
+    }
+
+    // 보증금이 매매가보다 크거나 같은 경우 경고
+    function checkDepositWarning() {
+        const price = getVal('price');
+        const deposit = getVal('deposit');
+        const warningEl = document.getElementById('depositWarning');
+        if (price > 0 && deposit > 0 && deposit >= price) {
+            warningEl.textContent = '⚠️ 보증금이 매매가보다 크거나 같습니다. 입력값을 확인해주세요.';
+            warningEl.classList.add('show');
+        } else {
+            warningEl.classList.remove('show');
+        }
+    }
+
     function calculateYield() {
         const price = getVal('price');
         const rent = getVal('rent');
@@ -968,6 +1014,10 @@
         const loanRate = getVal('loanRate');
 
         if (price === 0 || rent === 0) { alert('매매가와 월 임대료를 입력해주세요.'); return; }
+
+        checkRentWarning();
+        checkDepositWarning();
+        if (deposit >= price) { alert('보증금이 매매가보다 크거나 같습니다. 입력값을 확인해주세요.'); return; }
 
         const tax = price * 0.046;
         const annualRent = rent * 12;
@@ -980,6 +1030,9 @@
         }
         const netIncome = annualRent - annualLoanInterest;
         const yieldRate = actualInvestment > 0 ? (netIncome / actualInvestment * 100) : 0;
+
+        document.getElementById('yieldInputSummary').innerHTML =
+            `<strong>📋 입력값 요약</strong>매매가 ${koreanAmount(price)} · 보증금 ${koreanAmount(deposit)} · 월 임대료 ${koreanAmount(rent)} · 연 임대료 ${koreanAmount(annualRent)}`;
 
         document.getElementById('salePriceDisplay').textContent = fmt(price);
         document.getElementById('taxDisplay').textContent = fmt(tax);
@@ -1016,6 +1069,8 @@
         document.getElementById('loanSection').classList.remove('show');
         document.getElementById('yieldResult').classList.remove('show');
         document.querySelectorAll('#calc-0 .amount-preview').forEach(el => el.classList.remove('show'));
+        document.getElementById('rentWarning').classList.remove('show');
+        document.getElementById('depositWarning').classList.remove('show');
     }
 
     // ========== 임대료 인상 ==========
