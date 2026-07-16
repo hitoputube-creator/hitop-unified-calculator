@@ -906,21 +906,30 @@
                             <span class="result-value" id="jeonseAmount">0원</span>
                         </div>
                         <div class="result-item">
-                            <span class="result-label">적용 요율</span>
+                            <span class="result-label">적용 상한요율</span>
                             <span class="result-value" id="jeonseRate">0%</span>
                         </div>
                         <div class="result-item">
                             <span class="result-label">법정 한도액</span>
                             <span class="result-value" id="jeonseCap">한도 없음</span>
                         </div>
-                        <div class="result-item highlight">
-                            <span class="result-label">최대 중개보수</span>
+                        <div class="result-item">
+                            <span class="result-label">중개보수 상한액</span>
                             <span class="result-value" id="jeonseFee">0원</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">부가가치세 10%</span>
+                            <span class="result-value" id="jeonseVat">0원</span>
+                        </div>
+                        <div class="result-item highlight">
+                            <span class="result-label">부가세 포함 최종 금액</span>
+                            <span class="result-value" id="jeonseFeeTotal">0원</span>
                         </div>
                         <div class="result-explanation" id="jeonseExplanation"></div>
                         <div class="notice">
                             <strong>💡 부가세 안내</strong>
-                            위 금액은 중개보수 상한액이며, 부가세(VAT 10%)는 별도입니다. 중개보수는 상한액 이내에서 당사자 간 협의를 통해 조정 가능합니다.
+                            부가가치세 10%를 포함한 예상 최종 금액입니다. 중개보수는 상한액 이내에서 당사자 간 협의를 통해 조정 가능합니다.<br>
+                            <small style="color:#8892ab;">일반과세자 기준이며 실제 부가가치세 적용 여부는 중개사무소의 과세유형에 따라 확인이 필요합니다.</small>
                         </div>
                     </div>
                 </div>
@@ -954,21 +963,30 @@
                             <span class="result-value" id="wolseMethod">-</span>
                         </div>
                         <div class="result-item">
-                            <span class="result-label">적용 요율</span>
+                            <span class="result-label">적용 상한요율</span>
                             <span class="result-value" id="wolseRate">0%</span>
                         </div>
                         <div class="result-item">
                             <span class="result-label">법정 한도액</span>
                             <span class="result-value" id="wolseCap">한도 없음</span>
                         </div>
-                        <div class="result-item highlight">
-                            <span class="result-label">최대 중개보수</span>
+                        <div class="result-item">
+                            <span class="result-label">중개보수 상한액</span>
                             <span class="result-value" id="wolseFee">0원</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">부가가치세 10%</span>
+                            <span class="result-value" id="wolseVat">0원</span>
+                        </div>
+                        <div class="result-item highlight">
+                            <span class="result-label">부가세 포함 최종 금액</span>
+                            <span class="result-value" id="wolseFeeTotal">0원</span>
                         </div>
                         <div class="result-explanation" id="wolseExplanation"></div>
                         <div class="notice">
                             <strong>💡 부가세 안내</strong>
-                            위 금액은 중개보수 상한액이며, 부가세(VAT 10%)는 별도입니다. 중개보수는 상한액 이내에서 당사자 간 협의를 통해 조정 가능합니다.
+                            부가가치세 10%를 포함한 예상 최종 금액입니다. 중개보수는 상한액 이내에서 당사자 간 협의를 통해 조정 가능합니다.<br>
+                            <small style="color:#8892ab;">일반과세자 기준이며 실제 부가가치세 적용 여부는 중개사무소의 과세유형에 따라 확인이 필요합니다.</small>
                         </div>
                     </div>
                 </div>
@@ -1006,23 +1024,23 @@
                         <span class="result-value" id="convertedAmount">0원</span>
                     </div>
                     <div class="result-item">
-                        <span class="result-label">적용 요율</span>
+                        <span class="result-label">적용 상한요율</span>
                         <span class="result-value" id="appliedRate">0%</span>
                     </div>
                     <div class="result-item">
                         <span class="result-label">법정 한도액</span>
                         <span class="result-value" id="brokerageCap">한도 없음</span>
                     </div>
-                    <div class="result-item highlight">
+                    <div class="result-item">
                         <span class="result-label">중개보수 상한액</span>
                         <span class="result-value" id="brokerageFee">0원</span>
                     </div>
                     <div class="result-item">
-                        <span class="result-label">부가세 (VAT 10%)</span>
+                        <span class="result-label">부가가치세 10%</span>
                         <span class="result-value" id="brokerageVat">0원</span>
                     </div>
-                    <div class="result-item" style="background:#f0f4ff;">
-                        <span class="result-label" style="color:#333; font-weight:700;">부가세 포함 합계</span>
+                    <div class="result-item highlight">
+                        <span class="result-label">부가세 포함 최종 금액</span>
                         <span class="result-value" id="brokerageFeeTotal">0원</span>
                     </div>
                     <div class="result-explanation" id="brokerageExplanation"></div>
@@ -1034,7 +1052,8 @@
                             <small style="color:#666;">※ 월세는 100배 환산 후 보증금에 합산</small>
                         </p>
                         <p style="margin:8px 0 5px 0;">
-                            <strong>부가세(VAT):</strong> 개업공인중개사는 부가가치세법에 따라 중개보수에 10% VAT를 별도 수령할 수 있습니다. 실제 지불 금액 = 중개보수 + VAT
+                            <strong>부가세(VAT):</strong> 개업공인중개사는 부가가치세법에 따라 중개보수에 10% VAT를 별도 수령할 수 있습니다. 부가세 포함 최종 금액 = 중개보수 상한액 + 부가가치세<br>
+                            <small style="color:#8892ab;">일반과세자 기준이며 실제 부가가치세 적용 여부는 중개사무소의 과세유형에 따라 확인이 필요합니다.</small>
                         </p>
                         <p style="margin:10px 0 0 0; padding-top:10px; border-top:1px solid #ddd;">
                             <strong>주택 매매·교환 상한요율:</strong><br>
@@ -1388,6 +1407,23 @@
         document.getElementById('brokerageInfo').textContent = info[propType] || '유형별 상한요율이 다릅니다';
     }
 
+    // 공통 부가세 계산: 중개보수 금액을 먼저 원 단위로 확정한 뒤, 그 금액을 기준으로 부가세를 계산한다.
+    function calcBrokerageVat(preVatFee) {
+        const fee = Math.round(preVatFee);
+        const vat = Math.round(fee * 0.1);
+        const total = fee + vat;
+        return { fee, vat, total };
+    }
+
+    // 공통 부가세 결과 해설 (모든 중개수수료 유형에 동일하게 재사용)
+    function vatBreakdownHtml(fee, vat, total) {
+        return `<br><br>중개보수 상한액 <strong>${fmt(fee)}</strong><br>` +
+            `부가가치세 10% <strong>${fmt(vat)}</strong><br>` +
+            `부가세 포함 최종 금액 <strong>${fmt(total)}</strong><br>` +
+            `계산식: ${fmt(fee)} + ${fmt(vat)} = ${fmt(total)}<br>` +
+            `부가가치세 10%를 포함한 예상 최종 금액입니다.`;
+    }
+
     function calculateBrokerage() {
         const propType = document.getElementById('brokeragePropertyType').value;
         const txType = document.getElementById('transactionType').value;
@@ -1425,9 +1461,8 @@
 
         const rawFee = amount * rate;
         const capped = cap > 0 && rawFee > cap;
-        const fee = capped ? cap : rawFee;
-        const vat = fee * 0.1;
-        const total = fee + vat;
+        const preVatFee = capped ? cap : rawFee;
+        const { fee, vat, total } = calcBrokerageVat(preVatFee);
 
         document.getElementById('convertedAmount').textContent = fmt(amount);
         document.getElementById('appliedRate').textContent = (rate * 100).toFixed(1) + '%';
@@ -1446,12 +1481,13 @@
         }
         exp += `상한요율 ${(rate*100).toFixed(1)}%를 적용한 계산액은 ${fmt(rawFee)}입니다. `;
         if (capped) {
-            exp += `법정 한도액 <strong>${fmt(cap)}</strong>을 초과하여 한도액이 최종 중개보수 상한액(<strong>${fmt(fee)}</strong>)으로 적용됩니다. `;
+            exp += `법정 한도액 <strong>${fmt(cap)}</strong>을 초과하여 한도액이 최종 중개보수 상한액(<strong>${fmt(fee)}</strong>)으로 적용됩니다.`;
         } else {
-            exp += `중개보수 상한액은 <strong>${fmt(fee)}</strong>입니다. `;
+            exp += `중개보수 상한액은 <strong>${fmt(fee)}</strong>입니다.`;
         }
-        exp += `여기에 부가세(VAT 10%) ${fmt(vat)}를 합산하면 실제 지불금액은 <strong>${fmt(total)}</strong>입니다.`;
+        exp += vatBreakdownHtml(fee, vat, total);
         exp += ` 단, 중개보수는 당사자 간 협의를 통해 상한액 이하에서 조정 가능합니다.`;
+        exp += `<br><small style="color:#8892ab;">일반과세자 기준이며 실제 부가가치세 적용 여부는 중개사무소의 과세유형에 따라 확인이 필요합니다.</small>`;
 
         document.getElementById('brokerageExplanation').innerHTML = `<strong>💬 계산 결과 해설</strong>${exp}`;
         document.getElementById('brokerageResult').classList.add('show');
@@ -1495,12 +1531,15 @@
         const { rate, cap, label } = getHousingRentalRate(deposit);
         const rawFee = deposit * rate;
         const capped = cap > 0 && rawFee > cap;
-        const fee = capped ? cap : rawFee;
+        const preVatFee = capped ? cap : rawFee;
+        const { fee, vat, total } = calcBrokerageVat(preVatFee);
 
         document.getElementById('jeonseAmount').textContent = fmt(deposit);
         document.getElementById('jeonseRate').textContent = (rate * 100).toFixed(1) + '%';
         document.getElementById('jeonseCap').textContent = cap > 0 ? fmt(cap) : '한도 없음';
         document.getElementById('jeonseFee').textContent = fmt(fee);
+        document.getElementById('jeonseVat').textContent = fmt(vat);
+        document.getElementById('jeonseFeeTotal').textContent = fmt(total);
 
         let exp = `전세보증금 ${koreanAmount(deposit)}은 ${label} 구간으로 요율 <strong>${(rate * 100).toFixed(1)}%</strong>가 적용되어 계산액은 ${fmt(rawFee)}입니다. `;
         if (capped) {
@@ -1510,6 +1549,7 @@
         } else {
             exp += `해당 구간은 한도액이 없어 계산된 금액이 그대로 최대 중개보수입니다.`;
         }
+        exp += vatBreakdownHtml(fee, vat, total);
 
         document.getElementById('jeonseExplanation').innerHTML = `<strong>💬 계산 결과 해설</strong>${exp}`;
         document.getElementById('jeonseResult').classList.add('show');
@@ -1536,13 +1576,16 @@
         const { rate, cap, label } = getHousingRentalRate(amount);
         const rawFee = amount * rate;
         const capped = cap > 0 && rawFee > cap;
-        const fee = capped ? cap : rawFee;
+        const preVatFee = capped ? cap : rawFee;
+        const { fee, vat, total } = calcBrokerageVat(preVatFee);
 
         document.getElementById('wolseAmount').textContent = fmt(amount);
         document.getElementById('wolseMethod').textContent = method;
         document.getElementById('wolseRate').textContent = (rate * 100).toFixed(1) + '%';
         document.getElementById('wolseCap').textContent = cap > 0 ? fmt(cap) : '한도 없음';
         document.getElementById('wolseFee').textContent = fmt(fee);
+        document.getElementById('wolseVat').textContent = fmt(vat);
+        document.getElementById('wolseFeeTotal').textContent = fmt(total);
 
         let exp = `보증금 ${koreanAmount(dep)}에 월세 ${koreanAmount(rent)}를 (${method})으로 환산한 거래금액은 ${koreanAmount(amount)}이며, ${label} 구간 요율 <strong>${(rate * 100).toFixed(1)}%</strong>가 적용되어 계산액은 ${fmt(rawFee)}입니다. `;
         if (capped) {
@@ -1552,6 +1595,7 @@
         } else {
             exp += `해당 구간은 한도액이 없어 계산된 금액이 그대로 최대 중개보수입니다.`;
         }
+        exp += vatBreakdownHtml(fee, vat, total);
 
         document.getElementById('wolseExplanation').innerHTML = `<strong>💬 계산 결과 해설</strong>${exp}`;
         document.getElementById('wolseResult').classList.add('show');
