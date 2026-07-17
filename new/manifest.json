@@ -1,0 +1,23 @@
+{
+  "name": "하이탑부동산 통합 계산기",
+  "short_name": "하이탑계산기",
+  "description": "상가 수익률, 임대료 인상, 전월세 전환, 취득세, 중개수수료 계산",
+  "start_url": "/hitop-unified-calculator/new/",
+  "scope": "/hitop-unified-calculator/new/",
+  "display": "standalone",
+  "background_color": "#004d40",
+  "theme_color": "#004d40",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/hitop-unified-calculator/new/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/hitop-unified-calculator/new/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
