@@ -5,6 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>하이탑부동산 통합 계산기 (2026.07.01 복원본)</title>ㄹ
     <style>
+        :root {
+            --navy: #0b1f3a;
+            --navy-deep: #07162b;
+            --navy-light: #17345d;
+            --gold: #d9b83f;
+            --gold-deep: #b89424;
+            --gold-soft: #f5e7a8;
+            --bg: #f4f6f9;
+            --surface: #ffffff;
+            --text: #18202b;
+            --text-muted: #667085;
+            --border: #d8dee8;
+            --danger: #c2413b;
+            --success: #157347;
+            --shadow: 0 8px 24px rgba(11, 31, 58, 0.12);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,45 +30,51 @@
 
         body {
             font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
             padding: 20px;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 860px;
             margin: 0 auto;
         }
 
         header {
             text-align: center;
             color: white;
-            margin-bottom: 40px;
-            padding: 40px 20px;
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
+            margin-bottom: 0;
+            padding: 34px 20px;
+            border-radius: 16px 16px 0 0;
+            border-bottom: 3px solid var(--gold);
         }
 
         h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            font-size: 2em;
+            margin-bottom: 8px;
+            font-weight: 800;
+            letter-spacing: 0.3px;
         }
 
         .subtitle {
-            font-size: 1.1em;
+            font-size: 1em;
+            color: var(--gold-soft);
             opacity: 0.95;
         }
 
         .tab-container {
-            background: white;
-            border-radius: 15px 15px 0 0;
+            background: var(--surface);
+            border-radius: 0 0 16px 16px;
             overflow: hidden;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow);
         }
 
         .tabs {
             display: flex;
-            background: #f8f9fa;
-            border-bottom: 2px solid #e9ecef;
+            background: var(--bg);
+            border-bottom: 2px solid var(--border);
             flex-wrap: wrap;
         }
 
@@ -60,29 +83,36 @@
             padding: 15px 10px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             border: none;
+            border-bottom: 3px solid transparent;
             background: none;
             font-size: 0.9em;
-            color: #666;
+            color: var(--navy);
             min-width: 80px;
         }
 
         .tab:hover {
-            background: #e9ecef;
+            background: var(--navy-light);
+            color: white;
         }
 
         .tab.active {
-            background: white;
-            color: #667eea;
+            background: var(--navy);
+            color: var(--gold-soft);
             font-weight: bold;
-            border-bottom: 3px solid #667eea;
+            border-bottom: 3px solid var(--gold);
+        }
+
+        .tab:focus-visible {
+            outline: 2px solid var(--gold);
+            outline-offset: -2px;
         }
 
         .calculator {
             display: none;
             padding: 40px;
-            background: white;
+            background: var(--surface);
         }
 
         .calculator.active {
@@ -90,13 +120,13 @@
         }
 
         .calculator h2 {
-            color: #333;
+            color: var(--navy);
             margin-bottom: 10px;
             font-size: 1.8em;
         }
 
         .calculator > p {
-            color: #666;
+            color: var(--text-muted);
             margin-bottom: 30px;
         }
 
@@ -107,7 +137,7 @@
         .input-group label {
             display: block;
             margin-bottom: 8px;
-            color: #333;
+            color: var(--navy);
             font-weight: 500;
         }
 
@@ -115,22 +145,30 @@
         .input-group select {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e9ecef;
+            border: 2px solid var(--border);
             border-radius: 8px;
-            font-size: 1em;
-            transition: border-color 0.3s;
+            font-size: 16px;
+            background: var(--surface);
+            color: var(--text);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .input-group input:hover,
+        .input-group select:hover {
+            border-color: var(--navy-light);
         }
 
         .input-group input:focus,
         .input-group select:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(217, 184, 63, 0.25);
         }
 
         .input-group small {
             display: block;
             margin-top: 5px;
-            color: #999;
+            color: var(--text-muted);
             font-size: 0.9em;
         }
 
@@ -139,9 +177,9 @@
             display: none;
             margin-top: 6px;
             padding: 6px 10px;
-            background: #f0f4ff;
+            background: var(--gold-soft);
             border-radius: 6px;
-            color: #667eea;
+            color: var(--navy-deep);
             font-size: 0.95em;
             font-weight: 600;
         }
@@ -162,32 +200,37 @@
             border-radius: 8px;
             font-size: 1.1em;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             font-weight: bold;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--navy);
             color: white;
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            background: var(--navy-light);
+        }
+
+        .btn-primary:active {
+            transform: translateY(1px);
         }
 
         .btn-secondary {
-            background: #e9ecef;
-            color: #666;
+            background: var(--surface);
+            color: var(--navy);
+            border: 2px solid var(--navy);
         }
 
         .btn-secondary:hover {
-            background: #dee2e6;
+            background: var(--navy-light);
+            color: white;
         }
 
         .result {
             display: none;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            background: var(--gold-soft);
             padding: 30px;
             border-radius: 12px;
             margin-top: 30px;
@@ -209,9 +252,10 @@
             align-items: center;
             padding: 15px;
             margin-bottom: 10px;
-            background: white;
+            background: var(--surface);
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 5px rgba(11, 31, 58, 0.05);
         }
 
         .result-item:last-child {
@@ -219,56 +263,60 @@
         }
 
         .result-label {
-            color: #666;
+            color: var(--text-muted);
             font-weight: 500;
         }
 
         .result-value {
-            color: #667eea;
+            color: var(--gold-deep);
             font-weight: bold;
             font-size: 1.2em;
         }
 
         .highlight {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
             color: white;
             font-size: 1.2em;
         }
 
-        .highlight .result-label,
-        .highlight .result-value {
+        .highlight .result-label {
             color: white !important;
         }
 
+        .highlight .result-value {
+            color: var(--gold-soft) !important;
+        }
+
         .notice {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
+            background: var(--bg);
+            border-left: 4px solid var(--gold);
             padding: 15px;
             margin-top: 20px;
             border-radius: 4px;
-            color: #856404;
+            color: var(--text);
         }
 
         .notice strong {
             display: block;
             margin-bottom: 5px;
+            color: var(--navy);
         }
 
         /* 결과 설명 박스 */
         .result-explanation {
-            background: #e8f4fd;
-            border-left: 4px solid #667eea;
+            background: var(--bg);
+            border-left: 4px solid var(--gold);
             padding: 15px;
             margin-top: 15px;
             border-radius: 4px;
-            color: #334;
+            color: var(--text);
             font-size: 0.95em;
             line-height: 1.7;
         }
         .result-explanation strong {
             display: block;
             margin-bottom: 6px;
-            color: #667eea;
+            color: var(--navy);
         }
 
         table {
@@ -280,27 +328,13 @@
         th, td {
             padding: 12px;
             text-align: center;
-            border: 1px solid #dee2e6;
+            border: 1px solid var(--border);
         }
 
         th {
-            background: #f8f9fa;
+            background: var(--bg);
             font-weight: bold;
-            color: #333;
-        }
-
-        footer {
-            text-align: center;
-            color: white;
-            margin-top: 40px;
-            padding: 20px;
-            opacity: 0.9;
-        }
-
-        footer a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
+            color: var(--navy);
         }
 
         .toggle-container {
@@ -309,7 +343,7 @@
             gap: 10px;
             margin-bottom: 20px;
             padding: 15px;
-            background: #f8f9fa;
+            background: var(--bg);
             border-radius: 8px;
         }
 
@@ -346,16 +380,16 @@
             border-radius: 50%;
         }
 
-        input:checked + .slider { background-color: #667eea; }
+        input:checked + .slider { background-color: var(--navy); }
         input:checked + .slider:before { transform: translateX(30px); }
 
         .loan-section {
             display: none;
             padding: 20px;
-            background: #f8f9fa;
+            background: var(--bg);
             border-radius: 8px;
             margin-top: 15px;
-            border: 2px solid #667eea;
+            border: 2px solid var(--gold);
         }
 
         .loan-section.show { display: block; }
@@ -369,17 +403,24 @@
         .sel-btn {
             flex: none;
             padding: 9px 18px;
-            border: 2px solid #e9ecef;
+            border: 2px solid var(--border);
             border-radius: 8px;
             cursor: pointer;
-            background: white;
-            color: #666;
+            background: var(--surface);
+            color: var(--text-muted);
             font-size: 0.95em;
             font-weight: 600;
             transition: all 0.2s;
         }
-        .sel-btn:hover { border-color: #667eea; color: #667eea; }
-        .sel-btn.active { border-color: #667eea; background: #667eea; color: white; }
+        .sel-btn:hover { border-color: var(--navy); color: var(--navy); }
+        .sel-btn.active { border-color: var(--navy); background: var(--navy); color: white; }
+        .sel-btn:focus-visible,
+        .direction-btn:focus-visible,
+        .btn-primary:focus-visible,
+        .btn-secondary:focus-visible {
+            outline: 2px solid var(--gold);
+            outline-offset: 2px;
+        }
 
         /* 전월세 전환 탭 스타일 */
         .conversion-direction {
@@ -390,26 +431,114 @@
         .direction-btn {
             flex: 1;
             padding: 12px;
-            border: 2px solid #e9ecef;
+            border: 2px solid var(--border);
             border-radius: 8px;
             cursor: pointer;
-            background: white;
-            color: #666;
+            background: var(--surface);
+            color: var(--text-muted);
             font-size: 0.95em;
             font-weight: 600;
-            transition: all 0.3s;
+            transition: all 0.2s;
         }
         .direction-btn.active {
-            border-color: #667eea;
-            background: #f0f4ff;
-            color: #667eea;
+            border-color: var(--navy);
+            background: var(--navy);
+            color: var(--gold-soft);
+        }
+
+        /* 하단 하이탑부동산 정보 박스 */
+        .hitop-footer {
+            margin-top: 24px;
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
+            border-radius: 16px;
+            padding: 24px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            box-shadow: var(--shadow);
+            border-top: 3px solid var(--gold);
+        }
+
+        .hitop-footer-info {
+            color: white;
+        }
+
+        .hitop-footer-name {
+            font-size: 1.15em;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .hitop-footer-desc {
+            font-size: 0.88em;
+            color: rgba(255, 255, 255, 0.75);
+            margin-bottom: 8px;
+        }
+
+        .hitop-footer-phone {
+            display: inline-block;
+            color: var(--gold-soft);
+            font-weight: 700;
+            font-size: 1em;
+            text-decoration: none;
+        }
+
+        .hitop-footer-phone:hover {
+            color: var(--gold);
+            text-decoration: underline;
+        }
+
+        .hitop-footer-yt {
+            display: block;
+            margin-top: 8px;
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 0.82em;
+            text-decoration: none;
+        }
+        .hitop-footer-yt:hover { color: var(--gold-soft); }
+
+        .hitop-home-link {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gold);
+            color: var(--navy-deep);
+            font-weight: 700;
+            font-size: 0.95em;
+            padding: 13px 22px;
+            border-radius: 10px;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .hitop-home-link:hover {
+            background: var(--gold-deep);
+            color: white;
+        }
+
+        .hitop-home-link:focus-visible,
+        .hitop-footer-phone:focus-visible {
+            outline: 2px solid var(--gold-soft);
+            outline-offset: 2px;
         }
 
         @media (max-width: 768px) {
-            h1 { font-size: 1.8em; }
+            h1 { font-size: 1.5em; }
             .tab { flex-basis: 33.33%; padding: 12px 6px; font-size: 0.78em; }
             .calculator { padding: 20px; }
             .result-item { flex-direction: column; gap: 5px; }
+            .hitop-footer {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+                padding: 20px;
+            }
+            .hitop-home-link { width: 100%; }
         }
     </style>
 </head>
@@ -1201,9 +1330,21 @@
         </div>
     </div>
 
-    <footer>
-       <p><strong>하이탑부동산</strong> · <a href="tel:031-949-8969">031-949-8969</a> · 
-    <a href="https://www.youtube.com/@hitop_ai" target="_blank">▶ 유튜브 채널 바로가기</a></p>
+    <footer class="hitop-footer">
+        <div class="hitop-footer-info">
+            <div class="hitop-footer-name">하이탑부동산</div>
+            <div class="hitop-footer-desc">파주·고양 상업용부동산 및 주거용부동산 전문 상담</div>
+            <a class="hitop-footer-phone" href="tel:0319498969">031-949-8969</a>
+            <a class="hitop-footer-yt" href="https://www.youtube.com/@hitop_ai" target="_blank" rel="noopener noreferrer">▶ 유튜브 채널 바로가기</a>
+        </div>
+        <a
+            class="hitop-home-link"
+            href="https://hitoprealty.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            하이탑부동산 홈페이지
+        </a>
     </footer>
 </div>
 
